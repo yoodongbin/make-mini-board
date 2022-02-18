@@ -44,7 +44,7 @@ public class BoardController {
         model.addAttribute("detail", boardDTO);
         return "board-detail";
     }
-
+    @RequestMapping(value = "/delete-board")
     public String deleteBoard(@RequestParam("board_seq") int board_seq) {
         System.out.println("삭제하러 옴 !");
         mapper.deleteBoardBySeq(board_seq);

@@ -27,6 +27,6 @@
 
 <input type="button" value="수정" th:onclick="modifyboard([[${detail.board_seq}]])">
 <span>[[${detail.board_seq}]]</span>
-<input type="button" value="삭제" th:onclick="location.href='@{/deleteboard([[${detail.board_seq}]])}'">
+<input type="button" value="삭제" th:onclick="location.href='/delete-board?board_seq=[[${detail.board_seq}]]'">
 </body>
 </html>
