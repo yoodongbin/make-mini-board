@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+게시글 수정 화면입니다.
+<form action="modify-board" method="post" enctype="multipart/form-data" th:each="m : ${detail}">
+    <input type="hidden" name="board_seq" th:value="${m.board_seq}">
+    <input type="hidden" name="member_seq" th:value="${m.member_seq}">
+    제   목 : <input type="text" name="title" size="10" th:value="${m.title}"><br>
+    내   용 : <input type="text" name="board_contents" size="10" th:value="${m.board_contents}"><br>
+    <br>
+    <input type="submit" value="수정완료">
+</form>
+
+</body>
+</html>

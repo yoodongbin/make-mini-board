@@ -18,4 +18,10 @@
         delete from boards where
         board_seq = #{board_seq}
     </delete>
+
+    <update id="updateBoardBySeq" parameterType="com.example.dto.BoardDTO">
+        update boards
+        set title = #{title}, board_contents = #{board_contents}, member_seq = 1
+        where board_seq = #{board_seq}
+    </update>
 </mapper>
