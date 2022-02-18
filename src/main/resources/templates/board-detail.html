@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+게시글 상세보기 화면입니다.
+<table>
+    <thead>
+        <tr>
+            <th>boseq</th>
+            <th>meseq</th>
+            <th>제  목</th>
+            <th>내  용</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr th:each="m : ${detail}">
+            <td th:text="${m.board_seq}"></td>
+            <td th:text="${m.member_seq}"></td>
+            <td th:text="${m.title}"></td>
+            <td th:text="${m.board_contents}">s</td>
+        </tr>
+    </tbody>
+</table>
+
+<input type="button" value="수정" th:onclick="modifyboard([[${detail.board_seq}]])">
+<span>[[${detail.board_seq}]]</span>
+<input type="button" value="삭제" th:onclick="location.href='@{/deleteboard([[${detail.board_seq}]])}'">
+</body>
+</html>
