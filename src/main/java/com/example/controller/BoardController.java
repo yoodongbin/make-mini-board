@@ -2,6 +2,8 @@ package com.example.controller;
 
 import com.example.dao.BoardMapper;
 import com.example.dto.BoardDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,13 +13,16 @@ import java.util.List;
 
 @Controller
 public class BoardController {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     private BoardMapper mapper;
 
     //전체 게시글 출력, 게시글 main 화면
     @RequestMapping(value = "/board-list")
     public String getBoard(Model model) {
-        System.out.println("컨트롤러-getBoard");
+        logger.info("컨트롤러-getBoard");
         model.addAttribute("board", mapper.getBoard());
         return "board-list";
     }

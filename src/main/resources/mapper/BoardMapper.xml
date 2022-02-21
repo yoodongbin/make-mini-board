@@ -6,8 +6,8 @@
     </select>
 
     <insert id="setBoard" parameterType="com.example.dto.BoardDTO">
-        insert into boards
-        values(board_seq, 1, #{title}, #{board_contents})
+        insert into boards (member_seq, title, board_contents, create_date)
+        values( #{member_seq}, #{title}, #{board_contents}, now())
     </insert>
 
     <select id="findBoardBySeq" resultType="com.example.dto.BoardDTO">
@@ -21,7 +21,7 @@
 
     <update id="updateBoardBySeq" parameterType="com.example.dto.BoardDTO">
         update boards
-        set title = #{title}, board_contents = #{board_contents}, member_seq = 1
+        set title = #{title}, board_contents = #{board_contents}, member_seq = #{member_seq}
         where board_seq = #{board_seq}
     </update>
 </mapper>
