@@ -21,7 +21,7 @@
 
     <update id="updateBoardBySeq" parameterType="com.example.dto.BoardDTO">
         update boards
-        set title = #{title}, board_contents = #{board_contents}, member_seq = 1
+        set title = #{title}, board_contents = #{board_contents}, member_seq = #{member_seq}
         where board_seq = #{board_seq}
     </update>
 </mapper>
