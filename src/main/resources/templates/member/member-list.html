@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>회원조회</h1>
+<table>
+    <thead>
+    <tr>
+        <th>이름</th>
+        <th>이메일</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="m : ${member}">
+        <td th:text="${m.name}"></td>
+        <td th:text="${m.email}"></td>
+<!--        <td>-->
+<!--            <a th:href="@{/member-detail(member_seq=${m.member_seq})}" th:text="${m.name}"></a>-->
+<!--        </td>-->
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.dao.MemberMapper">
+    <select id="getMember" resultType="com.example.dto.MemberDTO">
+        SELECT name, email, pwd FROM member
+    </select>
+
+    <insert id="setMember" parameterType="com.example.dto.MemberDTO">
+        insert into member values(member_seq, #{name}, #{email}, #{pwd})
+    </insert>
+
+<!--login-->
+    <select id ="loginMember" resultType="com.example.dto.MemberDTO">
+        select member_seq, name
+        from member
+        where email= #{email}
+        and pwd= #{pwd}
+    </select>
+
+<!--    이메일 중복체크-->
+    <select id="checkDuplication" resultType="int">
+        select count(email)
+        from member
+        where email = #{email}
+    </select>
+
+</mapper>

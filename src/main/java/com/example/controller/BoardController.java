@@ -13,7 +13,7 @@ import java.util.List;
 
 @Controller
 public class BoardController {
-
+    //로그
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
@@ -28,9 +28,9 @@ public class BoardController {
     }
 
     //insert form
-    @GetMapping("/board-insert")
+    @GetMapping("/board-input")
     public String insertBoard() {
-        return "board-insert";
+        return "board-input";
     }
 
     //게시글 insert
@@ -53,7 +53,7 @@ public class BoardController {
     //게시글 삭제하기
     @RequestMapping(value = "/delete-board")
     public String deleteBoard(@RequestParam("board_seq") int board_seq) {
-        System.out.println("삭제하러 옴 !");
+        logger.info("삭제하러 옴 !");
         mapper.deleteBoardBySeq(board_seq);
         mapper.getBoard();
         return "redirect:/board-list";
@@ -62,7 +62,7 @@ public class BoardController {
     //게시글 수정하기
     @RequestMapping(value = "/update-board")
     public String updateBoard(@RequestParam("board_seq") int board_seq, Model model) {
-        System.out.println("게시글 수정할 폼을 불러오겠어용");
+        logger.info("게시글 수정할 폼을 불러오겠어용");
         BoardDTO boardDTO = mapper.findBoardBySeq(board_seq);
         model.addAttribute("detail", boardDTO);
         return "board-update";
@@ -71,11 +71,11 @@ public class BoardController {
     //게시글 update
     @RequestMapping(value = "/modify-board")
     public String modifyBoard(BoardDTO boardDTO, Model model) {
-        System.out.println("mapper 전 "+boardDTO);
+//        System.out.println("mapper 전 "+boardDTO);
         mapper.updateBoardBySeq(boardDTO);
         model.addAttribute("detail", boardDTO);
         model.addAttribute("board",mapper.getBoard());
-        System.out.println(boardDTO);
+//        System.out.println(boardDTO);
         return "board-detail";
     }
 }
