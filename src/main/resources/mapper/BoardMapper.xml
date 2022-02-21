@@ -6,8 +6,8 @@
     </select>
 
     <insert id="setBoard" parameterType="com.example.dto.BoardDTO">
-        insert into boards
-        values(board_seq, 1, #{title}, #{board_contents})
+        insert into boards (member_seq, title, board_contents, create_date)
+        values( #{member_seq}, #{title}, #{board_contents}, now())
     </insert>
 
     <select id="findBoardBySeq" resultType="com.example.dto.BoardDTO">
