@@ -43,14 +43,20 @@ public class MemberController {
     @RequestMapping(value = "/member-post", method = RequestMethod.POST)
     public String setMember(MemberDTO memberDTO, Model model) {
         logger.info("컨트롤러-setBoard");
-        int emailDuplication = mapper.checkDuplication(memberDTO);
-        if (emailDuplication !=0 ) {
-            logger.info("이미 가입된 회원입니다.");
-            return "member/try-login";
-        }else {
-            logger.info("회원가입 성공");
-            mapper.setMember(memberDTO);
-            return "member/member-post";
+        logger.info(memberDTO.getEmail());
+        if(memberDTO.getEmail().isEmpty()) {
+            logger.info("정보를 입력하세요.");
+            return "member/member-input";
+        } else {
+            int emailDuplication = mapper.checkDuplication(memberDTO);
+            if (emailDuplication != 0) {
+                logger.info("이미 가입된 회원입니다.");
+                return "member/try-login";
+            } else {
+                logger.info("회원가입 성공");
+                mapper.setMember(memberDTO);
+                return "member/member-post";
+            }
         }
     }
     // 로그인페이지 이동
@@ -60,7 +66,7 @@ public class MemberController {
     }
     //로그인
     @RequestMapping(value = "/member-login",  method = {RequestMethod.GET, RequestMethod.POST})
-    public String loginPost(HttpServletRequest req, @Valid @ModelAttribute("member") MemberDTO memberDTO, RedirectAttributes rttr, Error error) {
+    public String loginPost(HttpServletRequest req, @ModelAttribute("member") MemberDTO memberDTO, RedirectAttributes rttr, Error error) {
         logger.info(error.getMessage());
         HttpSession session = req.getSession();
             MemberDTO login = mapper.loginMember(memberDTO);
@@ -71,7 +77,7 @@ public class MemberController {
                 rttr.addFlashAttribute("msg", false);
                 return "redirect:/try-login";
             } else {
-                System.out.println("로그인 성공" + login.getEmail() + login.getPwd());
+                System.out.println("로그인 성공");
                 return "redirect:/board-list";
             }
 

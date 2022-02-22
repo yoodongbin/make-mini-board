@@ -17,4 +17,8 @@ public interface BoardMapper {
     public void deleteBoardBySeq(int board_seq);
 
     public void updateBoardBySeq(BoardDTO boardDTO);
+
+    public void viewCount(int board_seq);
+
+    public int forPaging();
 }

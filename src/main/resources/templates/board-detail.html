@@ -26,5 +26,11 @@
 <input type="button" value="수정" th:onclick="location.href='/update-board?board_seq=[[${detail.board_seq}]]'">
 <input type="button" value="삭제" th:onclick="location.href='/delete-board?board_seq=[[${detail.board_seq}]]'">
 <input type="button" value="목록으로 돌아가기" th:onclick="location.href='/board-list'">
+<br>
+    <form action="comment-post" method="post" enctype="multipart/form-data">
+        <input type="text" name="comment">
+    </form>
+<input type="submit" value="댓글 쓰기" th:onclick="location.href='/board-list'">
+
 </body>
 </html>

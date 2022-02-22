@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.dao.BoardMapper;
 import com.example.dto.BoardDTO;
+import com.example.dto.CommentDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 
 @Controller
 public class BoardController {
@@ -22,6 +25,7 @@ public class BoardController {
     //전체 게시글 출력, 게시글 main 화면
     @RequestMapping(value = "/board-list")
     public String getBoard(Model model) {
+
         logger.info("컨트롤러-getBoard");
         model.addAttribute("board", mapper.getBoard());
         return "board-list";
@@ -35,8 +39,10 @@ public class BoardController {
 
     //게시글 insert
     @RequestMapping(value = "/board-post", method = RequestMethod.POST)
-    public String setBoard(BoardDTO boardDTO, Model model) {
-        System.out.println("컨트롤러-setBoard");
+    public String setBoard(HttpServletRequest httpServletRequest, BoardDTO boardDTO, Model model, HttpSession session) {
+        logger.info("컨트롤러-setBoard");
+        int mseq = Integer.parseInt(httpServletRequest.getParameter("member_seq"));
+        logger.info(String.valueOf(mseq));
         mapper.setBoard(boardDTO);
         return "board-post";
     }
@@ -45,6 +51,7 @@ public class BoardController {
     @RequestMapping(value = "/board-detail")
     public String detailBoard(@RequestParam("board_seq") int board_seq, Model model) {
         System.out.println("컨트롤러-detailBoard");
+        mapper.viewCount(board_seq);
         BoardDTO boardDTO = mapper.findBoardBySeq(board_seq);
         model.addAttribute("detail", boardDTO);
         return "board-detail";
@@ -71,11 +78,9 @@ public class BoardController {
     //게시글 update
     @RequestMapping(value = "/modify-board")
     public String modifyBoard(BoardDTO boardDTO, Model model) {
-//        System.out.println("mapper 전 "+boardDTO);
         mapper.updateBoardBySeq(boardDTO);
         model.addAttribute("detail", boardDTO);
         model.addAttribute("board",mapper.getBoard());
-//        System.out.println(boardDTO);
         return "board-detail";
     }
 }

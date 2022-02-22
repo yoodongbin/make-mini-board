@@ -9,23 +9,24 @@
 <h1>게시판</h1>
 <!--<h1 th:value="${member.getName}"></h1>-->
 <input type="button" value="로그인" th:onclick="location.href='/try-login'">
+<input type="button" value="게시글쓰기" th:onclick="location.href='/board-input'">
 <table>
     <thead>
         <tr>
-            <th>boseq</th>
-            <th>meseq</th>
+            <th>index</th>
             <th>제  목</th>
             <th>내  용</th>
+            <th>조 회 수</th>
         </tr>
     </thead>
     <tbody>
-        <tr th:each="m : ${board}">
-            <td th:text="${m.board_seq}"></td>
-            <td th:text="${m.member_seq}"></td>
+        <tr th:each="m, n : ${board}">
+            <td th:text="${n.count}"></td>
             <td>
                 <a th:href="@{/board-detail(board_seq=${m.board_seq})}" th:text="${m.title}"></a>
             </td>
             <td th:text="${m.board_contents}">s</td>
+            <td th:text="${m.view}">s</td>
         </tr>
     </tbody>
 </table>
