@@ -6,5 +6,6 @@ create table board.boards
     title          varchar(45)   null,
     board_contents varchar(1000) null,
     create_date    datetime      null,
-    member_seq     varchar(45)   null
+    member_seq     varchar(45)   null,
+    view int default 0
 ) comment '게시판 DB';
