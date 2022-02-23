@@ -69,6 +69,7 @@ public class MemberController {
     public String loginPost(HttpServletRequest req, @ModelAttribute("member") MemberDTO memberDTO, RedirectAttributes rttr, Error error) {
         logger.info(error.getMessage());
         HttpSession session = req.getSession();
+        logger.info(String.valueOf(session));
             MemberDTO login = mapper.loginMember(memberDTO);
             session.setAttribute("member", login);
             logger.info("뭐가 찍히냐 ? " + login);

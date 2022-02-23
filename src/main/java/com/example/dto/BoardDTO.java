@@ -22,7 +22,7 @@ public class BoardDTO {
     @NotBlank(message = "내용을 입력하세요.")
     private String board_contents;
     private String image;
-    private Date created;
+    private Date create_date;
     private int view;
 
 }

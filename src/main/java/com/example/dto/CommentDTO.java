@@ -17,5 +17,5 @@ public class CommentDTO {
     private int member_seq;
     @NotBlank(message = "내용을 입력하세요.")
     private String comment_contents;
-    private Date comment_created;
+    private Date create_date;
 }

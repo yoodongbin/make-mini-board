@@ -8,4 +8,6 @@ import java.util.List;
 @Mapper
 public interface CommentMapper {
     public List<CommentDTO> getComment();
+
+    public CommentDTO setComment(CommentDTO commentDTO);
 }

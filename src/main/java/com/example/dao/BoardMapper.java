@@ -20,5 +20,7 @@ public interface BoardMapper {
 
     public void viewCount(int board_seq);
 
+    public List joinComment(int board_seq);
+
     public int forPaging();
 }

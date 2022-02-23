@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 
 @Controller
@@ -41,7 +42,7 @@ public class BoardController {
     }
 
     //게시글 insert
-    @RequestMapping(value = "/board-post", method = RequestMethod.POST)
+    @RequestMapping(value = "/board-post", method = {RequestMethod.POST, RequestMethod.GET})
     public String setBoard(HttpServletRequest httpServletRequest, BoardDTO boardDTO, Model model, HttpSession session) {
         logger.info("컨트롤러-setBoard");
         int mseq = Integer.parseInt(httpServletRequest.getParameter("member_seq"));
@@ -56,7 +57,10 @@ public class BoardController {
         System.out.println("컨트롤러-detailBoard");
         mapper.viewCount(board_seq);
         BoardDTO boardDTO = mapper.findBoardBySeq(board_seq);
+        logger.info(String.valueOf(board_seq));
         model.addAttribute("detail", boardDTO);
+        logger.info(String.valueOf(mapper.joinComment(board_seq)));
+        model.addAttribute("comments", mapper.joinComment(board_seq));
         return "board-detail";
     }
 
@@ -72,8 +76,9 @@ public class BoardController {
     //게시글 수정하기
     @RequestMapping(value = "/update-board")
     public String updateBoard(@RequestParam("board_seq") int board_seq, Model model) {
-        logger.info("게시글 수정할 폼을 불러오겠어용");
+        logger.info("게시글 수정할 폼을 불러오겠어용"+board_seq);
         BoardDTO boardDTO = mapper.findBoardBySeq(board_seq);
+        logger.info(String.valueOf(boardDTO));
         model.addAttribute("detail", boardDTO);
         return "board-update";
     }
