@@ -19,8 +19,11 @@ public class BoardController {
     //로그
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
     private BoardMapper mapper;
+
+    public BoardController(BoardMapper mapper) {
+        this.mapper = mapper;
+    }
 
     //전체 게시글 출력, 게시글 main 화면
     @RequestMapping(value = "/board-list")
