@@ -1,11 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-<!--위 링크 부분을 원래는 타임리프를 썼는데 타임리프에서 위 링크처럼 바꾸면  -->
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{layouts/main_layout}">
+
+<div class="container-fluid" layout:fragment="content" >
 <h1>게시판</h1>
 <!--<h1 th:value="${member.getName}"></h1>-->
 <input type="button" value="로그인" th:onclick="location.href='/try-login'">
@@ -16,7 +14,7 @@
             <th>index</th>
             <th>제  목</th>
             <th>내  용</th>
-            <th>조 회 수</th>
+            <th>조회수</th>
         </tr>
     </thead>
     <tbody>
@@ -30,5 +28,5 @@
         </tr>
     </tbody>
 </table>
-</body>
+</div>
 </html>
