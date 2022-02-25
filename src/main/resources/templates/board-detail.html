@@ -30,8 +30,11 @@
 <br>
     <form action="comment-post" method="post" enctype="multipart/form-data">
         <input type="text" name="comment_contents">
+<!--        <input type="submit" value="댓글 쓰기"-->
+<!--               th:onclick="location.href='/comment-post?board_seq=[[${detail.board_seq}]]'">-->
+        <input type="submit" value="전송" th:onclick="location.href='/comment-post?board_seq=[[${detail.board_seq}]]'">
     </form>
-<input type="submit" value="댓글 쓰기" th:onclick="location.href='/comment-post'">
+
 
 <tbody  th:each="m : ${comments}">
 <tr>

@@ -9,5 +9,5 @@ import java.util.List;
 public interface CommentMapper {
     public List<CommentDTO> getComment();
 
-    public CommentDTO setComment(CommentDTO commentDTO);
+    public void setComment(CommentDTO commentDTO);
 }

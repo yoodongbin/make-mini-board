@@ -8,6 +8,6 @@
     <insert id="setComment" parameterType="com.example.dto.CommentDTO">
         insert into comments
         (comment_seq, member_seq, board_seq, comment_contents)
-        values (comment_seq, 1, #{board_seq}, #{comment_contents});
+        values (comment_seq, #{member_seq}, #{board_seq}, #{comment_contents})
     </insert>
 </mapper>

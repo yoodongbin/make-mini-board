@@ -3,6 +3,7 @@ package com.example.controller;
 import com.example.dao.BoardMapper;
 import com.example.dto.BoardDTO;
 import com.example.dto.CommentDTO;
+import com.example.dto.MemberDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,15 +44,19 @@ public class BoardController {
 
     //게시글 insert
     @RequestMapping(value = "/board-post", method = {RequestMethod.POST, RequestMethod.GET})
-    public String setBoard(HttpServletRequest httpServletRequest, BoardDTO boardDTO, Model model, HttpSession session) {
-        logger.info("컨트롤러-setBoard");
-        int mseq = Integer.parseInt(httpServletRequest.getParameter("member_seq"));
-        logger.info(String.valueOf(mseq));
+    public String setBoard(HttpServletRequest httpServletRequest, BoardDTO boardDTO, Model model) {
+        HttpSession session = httpServletRequest.getSession();
+        MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
+        logger.info("출력 가즈아 ~~~~~~~~~~~~~"+String.valueOf(memberDTO));
+        int m_seq = memberDTO.getMember_seq();
+        logger.info(String.valueOf(m_seq));
+        boardDTO.setMember_seq(m_seq);
+        logger.info(String.valueOf(boardDTO));
         mapper.setBoard(boardDTO);
         return "board-post";
     }
 
-    //게시글 상세보기
+    //게시글 상세보기 and 댓글기능 !
     @RequestMapping(value = "/board-detail")
     public String detailBoard(@RequestParam("board_seq") int board_seq, Model model) {
         System.out.println("컨트롤러-detailBoard");
@@ -59,7 +64,8 @@ public class BoardController {
         BoardDTO boardDTO = mapper.findBoardBySeq(board_seq);
         logger.info(String.valueOf(board_seq));
         model.addAttribute("detail", boardDTO);
-        logger.info(String.valueOf(mapper.joinComment(board_seq)));
+        //댓글 부분
+        logger.info("댓글 부분 출력해보면"+String.valueOf(mapper.joinComment(board_seq)));
         model.addAttribute("comments", mapper.joinComment(board_seq));
         return "board-detail";
     }

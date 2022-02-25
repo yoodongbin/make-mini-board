@@ -66,19 +66,25 @@ public class MemberController {
     }
     //로그인
     @RequestMapping(value = "/member-login",  method = {RequestMethod.GET, RequestMethod.POST})
-    public String loginPost(HttpServletRequest req, @ModelAttribute("member") MemberDTO memberDTO, RedirectAttributes rttr, Error error) {
+    public String loginPost(HttpServletRequest httpServletRequest, @ModelAttribute("member") MemberDTO memberDTO, RedirectAttributes rttr, Error error) {
         logger.info(error.getMessage());
-        HttpSession session = req.getSession();
+        //세션
+        HttpSession session = httpServletRequest.getSession();
         logger.info(String.valueOf(session));
-            MemberDTO login = mapper.loginMember(memberDTO);
-            session.setAttribute("member", login);
-            logger.info("뭐가 찍히냐 ? " + login);
+        MemberDTO login = mapper.loginMember(memberDTO);
+
+        logger.info("뭐가 찍히냐 ? " + login);
             if (login == null) {
                 System.out.println("로그인 실패");
                 rttr.addFlashAttribute("msg", false);
                 return "redirect:/try-login";
             } else {
                 System.out.println("로그인 성공");
+//                계속 returnURL이 null이 나와서 우선 보류 !
+                String returnURL = httpServletRequest.getParameter("returnURL");
+//                logger.info(returnURL);
+//                return "redirect:"+returnURL;
+                session.setAttribute("login", login);
                 return "redirect:/board-list";
             }
 

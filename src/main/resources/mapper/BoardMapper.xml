@@ -48,7 +48,7 @@
     <select id="joinComment" parameterType="com.example.dto.MemberDTO"  resultMap="CommentDTO">
         select z.comment_seq, z.board_seq, z.member_seq, m.name, z.comment_contents, z.create_date
         from member m, (select * from comments where board_seq = #{board_seq}) z
-        where m.member_seq = z.member_seq;
+        where m.member_seq = z.member_seq
     </select>
 
 

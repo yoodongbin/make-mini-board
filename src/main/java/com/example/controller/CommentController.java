@@ -3,15 +3,13 @@ package com.example.controller;
 import com.example.dao.CommentMapper;
 import com.example.dto.BoardDTO;
 import com.example.dto.CommentDTO;
+import com.example.dto.MemberDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -25,12 +23,22 @@ public class CommentController {
     private CommentMapper mapper;
 
     //댓글 insert
-    @GetMapping(value = "/comment-post")
-    public String setComment(HttpSession session, CommentDTO commentDTO, Model model) {
-        logger.info(String.valueOf(session));
-        logger.info((String) session.getAttribute("member_seq"));
-        logger.info("컨트롤러-setBoard");
-        model.addAttribute("comments",mapper.setComment(commentDTO));
-        return "redirect:/";
+    @RequestMapping(value = "/comment-post" , method = {RequestMethod.GET, RequestMethod.POST})
+    public String setComment(HttpServletRequest httpServletRequest, @RequestParam("board_seq") int board_seq, CommentDTO commentDTO, Model model) {
+        HttpSession session = httpServletRequest.getSession();
+        MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
+        logger.info("commentdto 기존 기존"+commentDTO);
+        logger.info("commentDTO 출력"+commentDTO);
+        int m_seq = memberDTO.getMember_seq();
+        logger.info("잘 넘겨주나 ? m seq" + m_seq);
+        commentDTO.setMember_seq(m_seq);
+        logger.info("기존 보드 번호 몇번 가져오냐 ?"+board_seq);
+        commentDTO.setBoard_seq(board_seq);
+        logger.info("commetDTO 출력"+ commentDTO);
+        mapper.setComment(commentDTO);
+        logger.info("mapper 다녀왔느뇨");
+//        model.addAttribute("comments",mapper.setComment(commentDTO));
+//        model.addAttribute("board_seq", board_seq);
+        return "comment/comment-input";
     }
 }
