@@ -23,8 +23,8 @@ public class CommentController {
     private CommentMapper mapper;
 
     //댓글 insert
-    @RequestMapping(value = "/comment-post" , method = {RequestMethod.GET, RequestMethod.POST})
-    public String setComment(HttpServletRequest httpServletRequest, @RequestParam("board_seq") int board_seq, CommentDTO commentDTO, Model model) {
+    @RequestMapping(value = "/comment-post")
+    public String setComment(HttpServletRequest httpServletRequest,@RequestParam("board_seq")int board_seq ,CommentDTO commentDTO, Model model) {
         HttpSession session = httpServletRequest.getSession();
         MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
         logger.info("commentdto 기존 기존"+commentDTO);
@@ -32,13 +32,10 @@ public class CommentController {
         int m_seq = memberDTO.getMember_seq();
         logger.info("잘 넘겨주나 ? m seq" + m_seq);
         commentDTO.setMember_seq(m_seq);
-        logger.info("기존 보드 번호 몇번 가져오냐 ?"+board_seq);
-        commentDTO.setBoard_seq(board_seq);
+//        commentDTO.setBoard_seq(board_seq);
         logger.info("commetDTO 출력"+ commentDTO);
         mapper.setComment(commentDTO);
         logger.info("mapper 다녀왔느뇨");
-//        model.addAttribute("comments",mapper.setComment(commentDTO));
-//        model.addAttribute("board_seq", board_seq);
         return "comment/comment-input";
     }
 }
