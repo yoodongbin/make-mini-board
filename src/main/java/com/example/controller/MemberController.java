@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.dao.MemberMapper;
 import com.example.dto.MemberDTO;
+import com.example.util.SessionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +86,7 @@ public class MemberController {
 //                logger.info(returnURL);
 //                return "redirect:"+returnURL;
                 session.setAttribute("login", login);
+                SessionUtil.setLoginMemberId(session, memberDTO.getEmail());
                 return "redirect:/board-list";
             }
 

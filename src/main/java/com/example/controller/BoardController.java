@@ -4,6 +4,7 @@ import com.example.dao.BoardMapper;
 import com.example.dto.BoardDTO;
 import com.example.dto.CommentDTO;
 import com.example.dto.MemberDTO;
+import com.example.util.SessionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,11 @@ public class BoardController {
 
     //insert form
     @GetMapping("/board-input")
-    public String insertBoard() {
+    public String insertBoard(HttpSession session) {
+        String id = SessionUtil.getLoginMemberId(session);
+        logger.info(id);
+        logger.info("여기 로그인 관련 처리.");
+
         return "board-input";
     }
 
