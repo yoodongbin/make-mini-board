@@ -23,4 +23,6 @@ public interface BoardMapper {
     public List joinComment(int board_seq);
 
     public int forPaging();
+
+    public int countOfComments(int board_seq);
 }

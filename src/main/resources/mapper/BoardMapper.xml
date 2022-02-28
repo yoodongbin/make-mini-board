@@ -40,6 +40,7 @@
         <result column="comment_seq" property="comment_seq"></result>
         <result column="member_seq" property="member_seq"></result>
         <result column="board_seq" property="board_seq"></result>
+<!--        <result column="name" property="name"></result>-->
         <result column="comment_contents" property="comment_contents"></result>
         <result column="create_date" property="create_date"></result>
     </resultMap>
@@ -49,6 +50,12 @@
         select z.comment_seq, z.board_seq, z.member_seq, m.name, z.comment_contents, z.create_date
         from member m, (select * from comments where board_seq = #{board_seq}) z
         where m.member_seq = z.member_seq
+    </select>
+
+    <select id="countOfComments" resultMap="CommentDTO">
+        select count(comment_seq)
+        from comments
+        where board_seq = #{board_seq}
     </select>
 
 
