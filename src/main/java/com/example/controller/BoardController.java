@@ -48,16 +48,27 @@ public class BoardController {
     }
 
     //게시글 insert
-    @RequestMapping(value = "/board-post", method = {RequestMethod.POST, RequestMethod.GET})
-    public String setBoard(HttpServletRequest httpServletRequest, BoardDTO boardDTO, Model model) {
-        HttpSession session = httpServletRequest.getSession();
+//    @RequestMapping(value = "/board-post", method = {RequestMethod.POST, RequestMethod.GET})
+//    public String setBoard(HttpServletRequest httpServletRequest, BoardDTO boardDTO, Model model) {
+//        HttpSession session = httpServletRequest.getSession();
+//        MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
+//        logger.info("출력 가즈아 ~~~~~~~~~~~~~"+String.valueOf(memberDTO));
+//        int m_seq = memberDTO.getMember_seq();
+//        logger.info(String.valueOf(m_seq));
+//        boardDTO.setMember_seq(m_seq);
+//        logger.info(String.valueOf(boardDTO));
+//        mapper.setBoard(boardDTO);
+//        return "board-post";
+//    }
+
+    //게시글 insert
+    @PostMapping(value = "/board-post")
+    public String setBoardV2(HttpSession session, BoardDTO boardDTO, Model model) {
         MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
-        logger.info("출력 가즈아 ~~~~~~~~~~~~~"+String.valueOf(memberDTO));
         int m_seq = memberDTO.getMember_seq();
-        logger.info(String.valueOf(m_seq));
         boardDTO.setMember_seq(m_seq);
-        logger.info(String.valueOf(boardDTO));
         mapper.setBoard(boardDTO);
+
         return "board-post";
     }
 

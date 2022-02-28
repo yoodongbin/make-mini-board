@@ -30,7 +30,7 @@ public class MemberController {
     @RequestMapping(value = "/member-list")
     public String getMember(Model model) {
         logger.info("컨트롤러-getMember");
-        model.addAttribute("member", mapper.getMember());
+        model.addAttribute("member", mapper.getMembers());
         return "member/member-list";
     }
 
