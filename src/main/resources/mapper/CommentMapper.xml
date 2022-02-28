@@ -10,4 +10,14 @@
         (comment_seq, member_seq, board_seq, comment_contents)
         values (comment_seq, #{member_seq}, #{board_seq}, #{comment_contents})
     </insert>
+
+    <select id="findCommentBySeq" resultType="com.example.dto.CommentDTO">
+        select comment_seq, board_seq, member_seq, comment_contents, create_date from comments where comment_seq = #{comment_seq}
+    </select>
+
+    <delete id="deleteCommentBySeq" parameterType="com.example.dto.CommentDTO">
+        delete from comments where
+        comment_seq = #{comment_seq}
+    </delete>
+
 </mapper>

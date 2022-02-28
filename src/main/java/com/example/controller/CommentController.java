@@ -11,8 +11,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.net.ssl.HandshakeCompletedEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 public class CommentController {
@@ -24,9 +26,17 @@ public class CommentController {
 
     //댓글 insert
     @RequestMapping(value = "/comment-post")
-    public String setComment(HttpServletRequest httpServletRequest,@RequestParam("board_seq")int board_seq ,CommentDTO commentDTO, Model model) {
+    public String setComment(HttpServletRequest httpServletRequest,CommentDTO commentDTO, Model model) {
         HttpSession session = httpServletRequest.getSession();
         MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
+
+        HttpSession session_board = httpServletRequest.getSession();
+        BoardDTO detail_bo = (BoardDTO) session_board.getAttribute("b_detail");
+
+        logger.info((String) session_board.getAttribute("detail_bo"));
+        int bo_seq = detail_bo.getBoard_seq();
+        commentDTO.setBoard_seq(bo_seq);
+        logger.info(commentDTO.getComment_contents());
         logger.info("commentdto 기존 기존"+commentDTO);
         logger.info("commentDTO 출력"+commentDTO);
         int m_seq = memberDTO.getMember_seq();
@@ -36,6 +46,26 @@ public class CommentController {
         logger.info("commetDTO 출력"+ commentDTO);
         mapper.setComment(commentDTO);
         logger.info("mapper 다녀왔느뇨");
-        return "comment/comment-input";
+        return "redirect:/board-detail?board_seq="+bo_seq;
+    }
+
+    //댓글 삭제하기
+    @RequestMapping(value = "/delete-comment")
+    public String deleteComment(HttpServletRequest httpServletRequest, @RequestParam("comment_seq") int comment_seq) {
+        HttpSession session = httpServletRequest.getSession();
+        MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
+        int session_seq = memberDTO.getMember_seq();
+        logger.info("삭제하러 옴 !");
+        CommentDTO commentDTO = mapper.findCommentBySeq(comment_seq);
+        logger.info(String.valueOf(commentDTO));
+        if (session_seq == commentDTO.getMember_seq()) {
+            logger.info("삭제할게");
+            mapper.deleteCommentBySeq(comment_seq);
+            return "redirect:/board-detail?board_seq="+commentDTO.getBoard_seq();
+        } else {
+            logger.info("삭제권한이 없습니다.");
+            return "redirect:/board-detail?board_seq="+commentDTO.getBoard_seq();
+        }
+//        return "redirect:/board-detail?board_seq="+commentDTO.getBoard_seq();
     }
 }

@@ -63,24 +63,34 @@ public class BoardController {
 
     //게시글 상세보기 and 댓글기능 !
     @RequestMapping(value = "/board-detail")
-    public String detailBoard(@RequestParam("board_seq") int board_seq, Model model) {
+    public String detailBoard(HttpServletRequest httpServletRequest, @RequestParam("board_seq") int board_seq, Model model) {
+        HttpSession session = httpServletRequest.getSession();
         System.out.println("컨트롤러-detailBoard");
         mapper.viewCount(board_seq);
         BoardDTO boardDTO = mapper.findBoardBySeq(board_seq);
         logger.info(String.valueOf(board_seq));
         model.addAttribute("detail", boardDTO);
+        //세션추가
+        session.setAttribute("b_detail",boardDTO);
         //댓글 부분
         logger.info("댓글 부분 출력해보면"+String.valueOf(mapper.joinComment(board_seq)));
         model.addAttribute("comments", mapper.joinComment(board_seq));
+
+        logger.info(String.valueOf(mapper.joinComment(board_seq)));
         return "board-detail";
     }
 
     //게시글 삭제하기
     @RequestMapping(value = "/delete-board")
     public String deleteBoard(@RequestParam("board_seq") int board_seq) {
-        logger.info("삭제하러 옴 !");
-        mapper.deleteBoardBySeq(board_seq);
-        mapper.getBoard();
+        int countComments = mapper.countOfComments(board_seq);
+        if(countComments == 0) {
+            logger.info("삭제하러 옴 !");
+            mapper.deleteBoardBySeq(board_seq);
+            mapper.getBoard();
+        } else {
+            logger.info("댓글이 있는 게시글은 삭제할 수 없습니다.");
+        }
         return "redirect:/board-list";
     }
 
