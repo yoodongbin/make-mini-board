@@ -2,21 +2,18 @@ package com.example.controller;
 
 import com.example.dao.MemberMapper;
 import com.example.dto.MemberDTO;
+import com.example.service.MemberService;
 import com.example.util.SessionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 
 
 @Controller
@@ -26,10 +23,18 @@ public class MemberController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    private MemberService memberService;
+
+    public MemberController(MemberMapper mapper, MemberService memberService) {
+        this.mapper = mapper;
+        this.memberService = memberService;
+    }
+
     //전체 게시글 출력, 게시글 main 화면
-    @RequestMapping(value = "/member-list")
+    @GetMapping(value = "/member-list")
     public String getMember(Model model) {
         logger.info("컨트롤러-getMember");
+
         model.addAttribute("member", mapper.getMembers());
         return "member/member-list";
     }
@@ -41,17 +46,13 @@ public class MemberController {
     }
 
     //회원 insert
-    @RequestMapping(value = "/member-post", method = RequestMethod.POST)
+    @PostMapping(value = "/member-post")
     public String setMember(MemberDTO memberDTO, Model model) {
-        logger.info("컨트롤러-setBoard");
-        logger.info(memberDTO.getEmail());
         if(memberDTO.getEmail().isEmpty()) {
-            logger.info("정보를 입력하세요.");
             return "member/member-input";
         } else {
             int emailDuplication = mapper.checkDuplication(memberDTO);
             if (emailDuplication != 0) {
-                logger.info("이미 가입된 회원입니다.");
                 return "member/try-login";
             } else {
                 logger.info("회원가입 성공");
@@ -62,16 +63,23 @@ public class MemberController {
     }
     // 로그인페이지 이동
     @GetMapping("/try-login")
-    public String login() {
+    public String login(HttpServletRequest httpServletRequest) {
+        HttpSession session = httpServletRequest.getSession();
+        logger.info(String.valueOf(session));
+        if (session.getId() == null) {
+            logger.info("로그인 세션 살아있어 ? 아니 로그인세션 없어");
+        } else {
+            session.removeAttribute(session.getId());
+            session.invalidate(); //근데 이거 좀 위험함 ! 모든 세션 다 죽임 ㄷ ㄷ
+            logger.info("세션 데드");
+        }
         return "member/try-login";
     }
     //로그인
     @RequestMapping(value = "/member-login",  method = {RequestMethod.GET, RequestMethod.POST})
     public String loginPost(HttpServletRequest httpServletRequest, @ModelAttribute("member") MemberDTO memberDTO, RedirectAttributes rttr, Error error) {
-        logger.info(error.getMessage());
         //세션
         HttpSession session = httpServletRequest.getSession();
-        logger.info(String.valueOf(session));
         MemberDTO login = mapper.loginMember(memberDTO);
 
         logger.info("뭐가 찍히냐 ? " + login);

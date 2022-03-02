@@ -2,20 +2,17 @@ package com.example.controller;
 
 import com.example.dao.BoardMapper;
 import com.example.dto.BoardDTO;
-import com.example.dto.CommentDTO;
 import com.example.dto.MemberDTO;
 import com.example.service.BoardService;
 import com.example.util.SessionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 
 @Controller
@@ -33,11 +30,15 @@ public class BoardController {
     }
 
     //전체 게시글 출력, 게시글 main 화면
-    @RequestMapping(value = "/board-list")
-    public String getBoard(Model model) {
-
-        logger.info("컨트롤러-getBoard");
-        model.addAttribute("board", mapper.getBoard());
+    @GetMapping(value = "/board-list")
+    public String getBoard(HttpSession session, Model model) {
+        MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
+        if(memberDTO == null) {
+            logger.info("컨트롤러-getBoard");
+        }else {
+            model.addAttribute("login_info", memberDTO);
+        }
+        model.addAttribute("board", boardService.getBoardList());
         return "board-list";
     }
 
@@ -45,22 +46,20 @@ public class BoardController {
     @GetMapping("/board-input")
     public String insertBoard(HttpSession session) {
         String id = SessionUtil.getLoginMemberId(session);
-        logger.info(id);
-        logger.info("여기 로그인 관련 처리.");
-
-        return "board-input";
+        if (id == null) {
+            return "member/try-login";
+        }else {
+            return "board-input";
+        }
     }
-
+//-----------------------------------서비스 이용 본보기-----------------------------------------------
 //    //게시글 insert
 //    @RequestMapping(value = "/board-post", method = {RequestMethod.POST, RequestMethod.GET})
 //    public String setBoard(HttpServletRequest httpServletRequest, BoardDTO boardDTO, Model model) {
 //        HttpSession session = httpServletRequest.getSession();
 //        MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
-//        logger.info("출력 가즈아 ~~~~~~~~~~~~~"+String.valueOf(memberDTO));
 //        int m_seq = memberDTO.getMember_seq();
-//        logger.info(String.valueOf(m_seq));
 //        boardDTO.setMember_seq(m_seq);
-//        logger.info(String.valueOf(boardDTO));
 //        mapper.setBoard(boardDTO);
 //        return "board-post";
 //    }
@@ -73,32 +72,31 @@ public class BoardController {
 
         return "board-post";
     }
+//-----------------------------------서비스 이용 본보기-----------------------------------------------
 
     //게시글 상세보기 and 댓글기능 !
-    @RequestMapping(value = "/board-detail")
+    @GetMapping(value = "/board-detail")
     public String detailBoard(HttpServletRequest httpServletRequest, @RequestParam("board_seq") int board_seq, Model model) {
         HttpSession session = httpServletRequest.getSession();
-        System.out.println("컨트롤러-detailBoard");
+
+        MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
+        model.addAttribute("member_info", memberDTO);
+
         mapper.viewCount(board_seq);
         BoardDTO boardDTO = mapper.findBoardBySeq(board_seq);
-        logger.info(String.valueOf(board_seq));
         model.addAttribute("detail", boardDTO);
         //세션추가
         session.setAttribute("b_detail",boardDTO);
         //댓글 부분
-        logger.info("댓글 부분 출력해보면"+String.valueOf(mapper.joinComment(board_seq)));
         model.addAttribute("comments", mapper.joinComment(board_seq));
-
-        logger.info(String.valueOf(mapper.joinComment(board_seq)));
         return "board-detail";
     }
 
     //게시글 삭제하기
-    @RequestMapping(value = "/delete-board")
+    @GetMapping(value = "/delete-board")
     public String deleteBoard(@RequestParam("board_seq") int board_seq) {
         int countComments = mapper.countOfComments(board_seq);
         if(countComments == 0) {
-            logger.info("삭제하러 옴 !");
             mapper.deleteBoardBySeq(board_seq);
             mapper.getBoard();
         } else {
@@ -108,21 +106,40 @@ public class BoardController {
     }
 
     //게시글 수정하기
-    @RequestMapping(value = "/update-board")
+    @GetMapping(value = "/update-board")
     public String updateBoard(@RequestParam("board_seq") int board_seq, Model model) {
-        logger.info("게시글 수정할 폼을 불러오겠어용"+board_seq);
-        BoardDTO boardDTO = mapper.findBoardBySeq(board_seq);
-        logger.info(String.valueOf(boardDTO));
+        BoardDTO boardDTO = boardService.findByBoardSeq(board_seq);
         model.addAttribute("detail", boardDTO);
         return "board-update";
     }
 
     //게시글 update
-    @RequestMapping(value = "/modify-board")
+    @PostMapping(value = "/modify-board")
     public String modifyBoard(BoardDTO boardDTO, Model model) {
         mapper.updateBoardBySeq(boardDTO);
         model.addAttribute("detail", boardDTO);
         model.addAttribute("board",mapper.getBoard());
         return "board-detail";
+    }
+
+    //답글 !!!!!
+    //insert form
+    @GetMapping("/board-reply-input")
+    public String insertReplyBoard(@RequestParam("board_seq") int board_seq, Model model) {
+        BoardDTO boardDTO = boardService.findByBoardSeq(board_seq);
+        model.addAttribute("reply_info", boardDTO);
+        return "board-reply-input";
+    }
+    //답글 등록
+    @PostMapping(value = "/board-reply-post")
+    public String setReplyBoard(HttpSession session, BoardDTO boardDTO, Model model) {
+//        MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
+//        BoardDTO detail_bo = (BoardDTO) session.getAttribute("b_detail");
+//        detail_bo.setTitle(detail_bo.getTitle());
+//
+//
+//        BoardDTO boardDTO1 = boardService.saveBoard(memberDTO.getMember_seq(), boardDTO);
+
+        return "board-post";
     }
 }

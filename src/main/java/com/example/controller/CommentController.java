@@ -4,6 +4,7 @@ import com.example.dao.CommentMapper;
 import com.example.dto.BoardDTO;
 import com.example.dto.CommentDTO;
 import com.example.dto.MemberDTO;
+import com.example.service.CommentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,48 +25,33 @@ public class CommentController {
     @Autowired
     private CommentMapper mapper;
 
+    private CommentService commentService;
+
+    public CommentController(CommentMapper mapper, CommentService commentService) {
+        this.mapper = mapper;
+        this.commentService = commentService;
+    }
+
     //댓글 insert
-    @RequestMapping(value = "/comment-post")
-    public String setComment(HttpServletRequest httpServletRequest,CommentDTO commentDTO, Model model) {
-        HttpSession session = httpServletRequest.getSession();
+    @PostMapping(value = "/comment-post")
+    public String setComment(HttpSession session,CommentDTO commentDTO, Model model) {
         MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
-
-        HttpSession session_board = httpServletRequest.getSession();
-        BoardDTO detail_bo = (BoardDTO) session_board.getAttribute("b_detail");
-
-        logger.info((String) session_board.getAttribute("detail_bo"));
-        int bo_seq = detail_bo.getBoard_seq();
-        commentDTO.setBoard_seq(bo_seq);
-        logger.info(commentDTO.getComment_contents());
-        logger.info("commentdto 기존 기존"+commentDTO);
-        logger.info("commentDTO 출력"+commentDTO);
-        int m_seq = memberDTO.getMember_seq();
-        logger.info("잘 넘겨주나 ? m seq" + m_seq);
-        commentDTO.setMember_seq(m_seq);
-//        commentDTO.setBoard_seq(board_seq);
-        logger.info("commetDTO 출력"+ commentDTO);
-        mapper.setComment(commentDTO);
-        logger.info("mapper 다녀왔느뇨");
-        return "redirect:/board-detail?board_seq="+bo_seq;
+        BoardDTO detail_bo = (BoardDTO) session.getAttribute("b_detail");
+        CommentDTO commentDTO1 = commentService.saveComment(memberDTO.getMember_seq(), detail_bo.getBoard_seq(), commentDTO);
+        return "redirect:/board-detail?board_seq="+detail_bo.getBoard_seq();
     }
 
     //댓글 삭제하기
-    @RequestMapping(value = "/delete-comment")
-    public String deleteComment(HttpServletRequest httpServletRequest, @RequestParam("comment_seq") int comment_seq) {
-        HttpSession session = httpServletRequest.getSession();
+    @GetMapping(value = "/delete-comment")
+    public String deleteComment(HttpSession session, @RequestParam("comment_seq") int comment_seq) {
         MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
-        int session_seq = memberDTO.getMember_seq();
-        logger.info("삭제하러 옴 !");
-        CommentDTO commentDTO = mapper.findCommentBySeq(comment_seq);
-        logger.info(String.valueOf(commentDTO));
-        if (session_seq == commentDTO.getMember_seq()) {
-            logger.info("삭제할게");
-            mapper.deleteCommentBySeq(comment_seq);
-            return "redirect:/board-detail?board_seq="+commentDTO.getBoard_seq();
+        CommentDTO commentDTO = commentService.getCommentBySeq(comment_seq);
+        //현재 로그인한 사용자와, 댓글을 쓴 글쓴이의 멤버 id가 같은지를 확인함
+        if (memberDTO.getMember_seq() == commentDTO.getMember_seq()) {
+            commentService.removeComment(comment_seq);
         } else {
             logger.info("삭제권한이 없습니다.");
-            return "redirect:/board-detail?board_seq="+commentDTO.getBoard_seq();
         }
-//        return "redirect:/board-detail?board_seq="+commentDTO.getBoard_seq();
+        return "redirect:/board-detail?board_seq="+commentDTO.getBoard_seq();
     }
 }

@@ -6,6 +6,8 @@ import com.example.dto.BoardDTO;
 import com.example.dto.MemberDTO;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class BoardService {
 
@@ -17,12 +19,29 @@ public class BoardService {
         this.memberMapper = memberMapper;
     }
 
-    public BoardDTO saveBoard(Integer memberSeq, BoardDTO boardDTO){
+    public List<BoardDTO> getBoardList() {
+        List<BoardDTO> boardDTOList = boardMapper.getBoard();
+
+        return boardDTOList;
+    }
+
+    public BoardDTO saveBoard(Integer memberSeq, BoardDTO boardDTO) {
         boardDTO.setMember_seq(memberSeq);
         BoardMapper boardMapper = this.boardMapper;
         boardMapper.setBoard(boardDTO);
-
         return boardDTO;
-
     }
+
+    /*
+        public CommentDTO getCommentBySeq(Integer commentSeq) {
+       CommentDTO commentDTO = commentMapper.findCommentBySeq(commentSeq);
+        return commentDTO;
+    }
+     */
+
+    public BoardDTO findByBoardSeq(Integer boardSeq) {
+        BoardDTO boardDTO = boardMapper.findBoardBySeq(boardSeq);
+        return  boardDTO;
+    }
+
 }

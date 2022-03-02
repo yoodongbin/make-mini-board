@@ -9,30 +9,26 @@
     <title>Title</title>
 </head>
 <body>
-게시글 상세보기 화면입니다.
+게시글 상세보기 화면입니다. <br>
 <table>
-    <thead>
+    <tbody  th:each="m : ${detail}">
         <tr>
             <th>제  목</th>
+            <td th:text="${m.title}"></td>
         </tr>
         <tr>
             <th>내  용</th>
-        </tr>
-    </thead>
-    <tbody  th:each="m : ${detail}">
-    <tr>
-            <td th:text="${m.title}"></td>
-        <tr>
-        <tr>
             <td th:text="${m.board_contents}">s</td>
         </tr>
     </tbody>
 </table>
+<span th:if="${member_info.member_seq == detail.member_seq}">
+    <input type="button" value="수정" th:onclick="location.href='/update-board?board_seq=[[${detail.board_seq}]]'">
+    <input type="button" value="답글" th:onclick="location.href='/board-reply-input?board_seq=[[${detail.board_seq}]]'">
+    <input type="button" value="삭제" th:onclick="location.href='/delete-board?board_seq=[[${detail.board_seq}]]'">
+</span>
 
-<input type="button" th:text="${detail.board_seq}"
-       value="수정" th:onclick="location.href='/update-board?board_seq=[[${detail.board_seq}]]'">
-<input type="button" value="삭제" th:onclick="location.href='/delete-board?board_seq=[[${detail.board_seq}]]'">
-<input type="button" value="목록으로 돌아가기" th:onclick="location.href='/board-list'">
+
 <br>
     <form action="comment-post" method="post" enctype="multipart/form-data">
         <input type="text" id= "comment_contents" name="comment_contents">
@@ -49,7 +45,11 @@
     <input type="button" value="댓글 삭제" th:onclick="location.href='/delete-comment?comment_seq=[[${m.comment_seq}]]'">
     <br>
 </tr>
-</tbody>
 
+
+</tbody>
+    <br>
+    <input type="button" value="목록으로 돌아가기" th:onclick="location.href='/board-list'">
 </body>
+</div>
 </html>

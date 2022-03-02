@@ -21,6 +21,7 @@ create table board.boards
     modify_date datetime,
     member_seq  int not null,
     view int default 0,
+    parent_seq int,
     KEY member_seq (member_seq),
     FOREIGN KEY (member_seq) REFERENCES member (MEMBER_SEQ)
 ) comment '게시판 DB';
@@ -50,7 +51,7 @@ values(member_seq, "ggoboogichip", "ggoboogichip@satto.co.kr","Test123!",2000081
 insert into member (member_seq, name, email, password, birthdate)
 values(member_seq, "zagalchi", "zagalchi@satto.co.kr","Test123!",20010917);
 insert into member (member_seq, name, email, password, birthdate)
-values(member_seq, "caramel", "caramel@satto.co.kr","Test123!",200201018);
+values(member_seq, "caramel", "caramel@satto.co.kr","Test123!",20201018);
 
 --게시판글 삽입
 insert into boards

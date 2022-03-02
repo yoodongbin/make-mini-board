@@ -53,7 +53,7 @@
     </select>
 
     <select id="countOfComments" resultMap="CommentDTO">
-        select count(comment_seq)
+        select IFNULL(count(comment_seq),0)
         from comments
         where board_seq = #{board_seq}
     </select>

@@ -6,7 +6,13 @@
 <div class="container-fluid" layout:fragment="content" >
 <h1>게시판</h1>
 <!--<h1 th:value="${member.getName}"></h1>-->
+    <span th:if="${login_info == null}">
 <input type="button" value="로그인" th:onclick="location.href='/try-login'">
+        </span>
+    <span th:unless="${login_info == null}">
+        <span th:text="|Hello, ${login_info.name} ~|"></span>
+        <input type="button" value="로그아웃" th:onclick="location.href='/try-login'"> <br>
+    </span>
 <input type="button" value="게시글쓰기" th:onclick="location.href='/board-input'">
 <table>
     <thead>
