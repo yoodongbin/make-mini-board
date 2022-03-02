@@ -4,6 +4,7 @@ import com.example.dao.BoardMapper;
 import com.example.dto.BoardDTO;
 import com.example.dto.CommentDTO;
 import com.example.dto.MemberDTO;
+import com.example.service.BoardService;
 import com.example.util.SessionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,8 +25,11 @@ public class BoardController {
 
     private BoardMapper mapper;
 
-    public BoardController(BoardMapper mapper) {
+    private BoardService boardService;
+
+    public BoardController(BoardMapper mapper, BoardService boardService) {
         this.mapper = mapper;
+        this.boardService = boardService;
     }
 
     //전체 게시글 출력, 게시글 main 화면
@@ -47,7 +51,7 @@ public class BoardController {
         return "board-input";
     }
 
-    //게시글 insert
+//    //게시글 insert
 //    @RequestMapping(value = "/board-post", method = {RequestMethod.POST, RequestMethod.GET})
 //    public String setBoard(HttpServletRequest httpServletRequest, BoardDTO boardDTO, Model model) {
 //        HttpSession session = httpServletRequest.getSession();
@@ -65,9 +69,7 @@ public class BoardController {
     @PostMapping(value = "/board-post")
     public String setBoardV2(HttpSession session, BoardDTO boardDTO, Model model) {
         MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
-        int m_seq = memberDTO.getMember_seq();
-        boardDTO.setMember_seq(m_seq);
-        mapper.setBoard(boardDTO);
+        BoardDTO boardDTO1 = boardService.saveBoard(memberDTO.getMember_seq(), boardDTO);
 
         return "board-post";
     }

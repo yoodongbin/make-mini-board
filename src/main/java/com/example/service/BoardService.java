@@ -4,7 +4,9 @@ import com.example.dao.BoardMapper;
 import com.example.dao.MemberMapper;
 import com.example.dto.BoardDTO;
 import com.example.dto.MemberDTO;
+import org.springframework.stereotype.Service;
 
+@Service
 public class BoardService {
 
     private BoardMapper boardMapper;
