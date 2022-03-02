@@ -4,6 +4,8 @@ import com.example.dao.BoardMapper;
 import com.example.dto.BoardDTO;
 import com.example.dto.CommentDTO;
 import com.example.dto.MemberDTO;
+import com.example.service.BoardService;
+import com.example.util.SessionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +25,11 @@ public class BoardController {
 
     private BoardMapper mapper;
 
-    public BoardController(BoardMapper mapper) {
+    private BoardService boardService;
+
+    public BoardController(BoardMapper mapper, BoardService boardService) {
         this.mapper = mapper;
+        this.boardService = boardService;
     }
 
     //전체 게시글 출력, 게시글 main 화면
@@ -38,21 +43,34 @@ public class BoardController {
 
     //insert form
     @GetMapping("/board-input")
-    public String insertBoard() {
+    public String insertBoard(HttpSession session) {
+        String id = SessionUtil.getLoginMemberId(session);
+        logger.info(id);
+        logger.info("여기 로그인 관련 처리.");
+
         return "board-input";
     }
 
+//    //게시글 insert
+//    @RequestMapping(value = "/board-post", method = {RequestMethod.POST, RequestMethod.GET})
+//    public String setBoard(HttpServletRequest httpServletRequest, BoardDTO boardDTO, Model model) {
+//        HttpSession session = httpServletRequest.getSession();
+//        MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
+//        logger.info("출력 가즈아 ~~~~~~~~~~~~~"+String.valueOf(memberDTO));
+//        int m_seq = memberDTO.getMember_seq();
+//        logger.info(String.valueOf(m_seq));
+//        boardDTO.setMember_seq(m_seq);
+//        logger.info(String.valueOf(boardDTO));
+//        mapper.setBoard(boardDTO);
+//        return "board-post";
+//    }
+
     //게시글 insert
-    @RequestMapping(value = "/board-post", method = {RequestMethod.POST, RequestMethod.GET})
-    public String setBoard(HttpServletRequest httpServletRequest, BoardDTO boardDTO, Model model) {
-        HttpSession session = httpServletRequest.getSession();
+    @PostMapping(value = "/board-post")
+    public String setBoardV2(HttpSession session, BoardDTO boardDTO, Model model) {
         MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
-        logger.info("출력 가즈아 ~~~~~~~~~~~~~"+String.valueOf(memberDTO));
-        int m_seq = memberDTO.getMember_seq();
-        logger.info(String.valueOf(m_seq));
-        boardDTO.setMember_seq(m_seq);
-        logger.info(String.valueOf(boardDTO));
-        mapper.setBoard(boardDTO);
+        BoardDTO boardDTO1 = boardService.saveBoard(memberDTO.getMember_seq(), boardDTO);
+
         return "board-post";
     }
 
