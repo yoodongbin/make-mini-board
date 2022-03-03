@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{layouts/main_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="container-fluid" layout:fragment="content" >
+
+    <div th:text="|총 ${searchList.size} 건의 검색내역 입니다.|">
+    </div>
+    <table class="table">
+    <thead>
+    <tr>
+        <th>index</th>
+        <th>제  목</th>
+        <th>내  용</th>
+        <th>조회수</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="m, n : ${searchList}">
+        <td th:text="${n.count}"></td>
+        <td>
+            <a th:href="@{/board-detail(board_seq=${m.board_seq})}" th:text="${m.title}"></a>
+        </td>
+        <td th:text="${m.board_contents}">s</td>
+        <td th:text="${m.view}">s</td>
+    </tr>
+    </tbody>
+</table>
+</div>
+</body>
+</html>

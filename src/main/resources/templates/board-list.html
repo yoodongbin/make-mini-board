@@ -12,9 +12,10 @@
     <span th:unless="${login_info == null}">
         <span th:text="|Hello, ${login_info.name} ~|"></span>
         <input type="button" value="로그아웃" th:onclick="location.href='/try-login'"> <br>
+        <input type="button" value="게시글쓰기" th:onclick="location.href='/board-input'">
     </span>
-<input type="button" value="게시글쓰기" th:onclick="location.href='/board-input'">
-<table>
+
+<table class="table">
     <thead>
         <tr>
             <th>index</th>

@@ -25,6 +25,12 @@ public class BoardService {
         return boardDTOList;
     }
 
+    public List<BoardDTO> searchForKeyword(String keyword){
+        List<BoardDTO> searchList = boardMapper.searchForKeyword(keyword);
+        System.out.println(searchList);
+        return searchList;
+    }
+
     public BoardDTO saveBoard(Integer memberSeq, BoardDTO boardDTO) {
         boardDTO.setMember_seq(memberSeq);
         BoardMapper boardMapper = this.boardMapper;
@@ -32,16 +38,22 @@ public class BoardService {
         return boardDTO;
     }
 
-    /*
-        public CommentDTO getCommentBySeq(Integer commentSeq) {
-       CommentDTO commentDTO = commentMapper.findCommentBySeq(commentSeq);
-        return commentDTO;
-    }
-     */
-
     public BoardDTO findByBoardSeq(Integer boardSeq) {
         BoardDTO boardDTO = boardMapper.findBoardBySeq(boardSeq);
         return  boardDTO;
+    }
+
+    public BoardDTO setReplyBoard(Integer memberSeq, Integer parentSeq, BoardDTO boardDTO) {
+        boardDTO.setMember_seq(memberSeq);
+        boardDTO.setParent_seq(parentSeq);
+        BoardMapper boardMapper = this.boardMapper;
+        boardMapper.setReplyBoard(boardDTO);
+        return boardDTO;
+    }
+
+    public int findReplyBoardBySeq(Integer boardSeq) {
+        int replyCount = boardMapper.findReplyBoardBySeq(boardSeq);
+        return replyCount;
     }
 
 }

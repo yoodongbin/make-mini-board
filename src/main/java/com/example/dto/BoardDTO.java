@@ -24,5 +24,6 @@ public class BoardDTO {
     private String image;
     private Date create_date;
     private int view;
+    private int parent_seq;
 
 }

@@ -52,11 +52,22 @@
         where m.member_seq = z.member_seq
     </select>
 
-    <select id="countOfComments" resultMap="CommentDTO">
-        select IFNULL(count(comment_seq),0)
-        from comments
-        where board_seq = #{board_seq}
+    <insert id="setReplyBoard" parameterType="com.example.dto.BoardDTO">
+        insert into boards (board_seq, member_seq, title, board_contents, parent_seq, create_date)
+        values(board_seq, #{member_seq}, #{title}, #{board_contents}, #{parent_seq}, now())
+    </insert>
+
+<!--    해당 게시물의 답글 갯수 카운팅해줌-->
+    <select id="findReplyBoardBySeq" resultType="int">
+        select count(board_seq)
+        from boards
+        where parent_seq is not null
+        and parent_seq = #{board_seq}
     </select>
 
-
+    <select id="searchForKeyword" resultType="com.example.dto.BoardDTO">
+        select *
+        from boards
+        where title like concat('%',#{keyword},'%')
+    </select>
 </mapper>

@@ -96,11 +96,12 @@ public class BoardController {
     @GetMapping(value = "/delete-board")
     public String deleteBoard(@RequestParam("board_seq") int board_seq) {
         int countComments = mapper.countOfComments(board_seq);
-        if(countComments == 0) {
+        int countReply = boardService.findReplyBoardBySeq(board_seq);
+        if(countComments == 0 && countReply == 0) {
             mapper.deleteBoardBySeq(board_seq);
             mapper.getBoard();
         } else {
-            logger.info("댓글이 있는 게시글은 삭제할 수 없습니다.");
+            logger.info("댓글과 답글이 있는 게시글은 삭제할 수 없습니다.");
         }
         return "redirect:/board-list";
     }
@@ -119,7 +120,7 @@ public class BoardController {
         mapper.updateBoardBySeq(boardDTO);
         model.addAttribute("detail", boardDTO);
         model.addAttribute("board",mapper.getBoard());
-        return "board-detail";
+        return "board-post";
     }
 
     //답글 !!!!!
@@ -133,13 +134,20 @@ public class BoardController {
     //답글 등록
     @PostMapping(value = "/board-reply-post")
     public String setReplyBoard(HttpSession session, BoardDTO boardDTO, Model model) {
-//        MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
-//        BoardDTO detail_bo = (BoardDTO) session.getAttribute("b_detail");
-//        detail_bo.setTitle(detail_bo.getTitle());
-//
-//
-//        BoardDTO boardDTO1 = boardService.saveBoard(memberDTO.getMember_seq(), boardDTO);
-
+        MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
+        BoardDTO detail_bo = (BoardDTO) session.getAttribute("b_detail");
+        boardService.findReplyBoardBySeq(detail_bo.getBoard_seq());
+        String titles = detail_bo.getTitle()+"("+boardService.findReplyBoardBySeq(detail_bo.getBoard_seq())+")";
+        boardDTO.setTitle(titles);
+        boardService.setReplyBoard(memberDTO.getMember_seq(), detail_bo.getBoard_seq(), boardDTO);
         return "board-post";
+    }
+
+    //검색
+    @RequestMapping("/search-post")
+    public String searchBoards(@RequestParam("keyword") String keyword, Model model) {
+        logger.info(keyword);
+        model.addAttribute("searchList", boardService.searchForKeyword(keyword));
+        return "search-post";
     }
 }

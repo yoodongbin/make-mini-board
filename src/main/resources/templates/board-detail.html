@@ -23,33 +23,35 @@
     </tbody>
 </table>
 <span th:if="${member_info.member_seq == detail.member_seq}">
-    <input type="button" value="수정" th:onclick="location.href='/update-board?board_seq=[[${detail.board_seq}]]'">
-    <input type="button" value="답글" th:onclick="location.href='/board-reply-input?board_seq=[[${detail.board_seq}]]'">
-    <input type="button" value="삭제" th:onclick="location.href='/delete-board?board_seq=[[${detail.board_seq}]]'">
+    <input type="button" class="btn btn-primary mb-3" value="수정" th:onclick="location.href='/update-board?board_seq=[[${detail.board_seq}]]'">
+    <input type="button" class="btn btn-primary mb-3" value="답글" th:onclick="location.href='/board-reply-input?board_seq=[[${detail.board_seq}]]'">
+    <input type="button" class="btn btn-primary mb-3" value="삭제" th:onclick="location.href='/delete-board?board_seq=[[${detail.board_seq}]]'">
 </span>
-
 
 <br>
     <form action="comment-post" method="post" enctype="multipart/form-data">
         <input type="text" id= "comment_contents" name="comment_contents">
 <!--        <input type="submit" value="댓글 쓰기"-->
 <!--               th:onclick="location.href='/comment-post?board_seq=[[${detail.board_seq}]]'">-->
-        <input type="submit" value="댓글 등록">
+        <input type="submit" class="btn btn-primary mb-3" value="댓글 등록">
     </form>
 
-
-<tbody  th:each="m : ${comments}">
+<!--댓글 부분-->
+<table class="table" th:each="m : ${comments}">
 <tr>
     <td th:text="${m.comment_contents}"></td>
     <td th:text="${m.create_date}"></td>
-    <input type="button" value="댓글 삭제" th:onclick="location.href='/delete-comment?comment_seq=[[${m.comment_seq}]]'">
+<!--    자신이 작성한 댓글에만 삭제버튼활성화-->
+    <span th:if="${member_info.member_seq == m.member_seq}">
+        <input type="button" value="댓글 삭제" th:onclick="location.href='/delete-comment?comment_seq=[[${m.comment_seq}]]'">
+    </span>
     <br>
 </tr>
 
 
-</tbody>
+</table>
     <br>
-    <input type="button" value="목록으로 돌아가기" th:onclick="location.href='/board-list'">
+    <input type="button" class="btn btn-primary mb-3" value="목록으로 돌아가기" th:onclick="location.href='/board-list'">
 </body>
 </div>
 </html>

@@ -25,4 +25,10 @@ public interface BoardMapper {
     public int forPaging();
 
     public int countOfComments(int board_seq);
+
+    public void setReplyBoard(BoardDTO boardDTO);
+
+    public int findReplyBoardBySeq(int board_seq);
+
+    public List<BoardDTO> searchForKeyword(String keyword);
 }

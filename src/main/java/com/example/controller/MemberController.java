@@ -55,7 +55,6 @@ public class MemberController {
             if (emailDuplication != 0) {
                 return "member/try-login";
             } else {
-                logger.info("회원가입 성공");
                 mapper.setMember(memberDTO);
                 return "member/member-post";
             }
@@ -65,13 +64,11 @@ public class MemberController {
     @GetMapping("/try-login")
     public String login(HttpServletRequest httpServletRequest) {
         HttpSession session = httpServletRequest.getSession();
-        logger.info(String.valueOf(session));
         if (session.getId() == null) {
             logger.info("로그인 세션 살아있어 ? 아니 로그인세션 없어");
         } else {
             session.removeAttribute(session.getId());
             session.invalidate(); //근데 이거 좀 위험함 ! 모든 세션 다 죽임 ㄷ ㄷ
-            logger.info("세션 데드");
         }
         return "member/try-login";
     }
@@ -82,17 +79,11 @@ public class MemberController {
         HttpSession session = httpServletRequest.getSession();
         MemberDTO login = mapper.loginMember(memberDTO);
 
-        logger.info("뭐가 찍히냐 ? " + login);
             if (login == null) {
-                System.out.println("로그인 실패");
                 rttr.addFlashAttribute("msg", false);
                 return "redirect:/try-login";
             } else {
-                System.out.println("로그인 성공");
-//                계속 returnURL이 null이 나와서 우선 보류 !
                 String returnURL = httpServletRequest.getParameter("returnURL");
-//                logger.info(returnURL);
-//                return "redirect:"+returnURL;
                 session.setAttribute("login", login);
                 SessionUtil.setLoginMemberId(session, memberDTO.getEmail());
                 return "redirect:/board-list";
