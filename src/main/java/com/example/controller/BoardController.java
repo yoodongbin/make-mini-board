@@ -3,8 +3,10 @@ package com.example.controller;
 import com.example.dao.BoardMapper;
 import com.example.dto.BoardDTO;
 import com.example.dto.MemberDTO;
+import com.example.dto.Pagination;
 import com.example.service.BoardService;
 import com.example.util.SessionUtil;
+import com.sun.tools.jconsole.JConsoleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -31,14 +33,27 @@ public class BoardController {
 
     //전체 게시글 출력, 게시글 main 화면
     @GetMapping(value = "/board-list")
-    public String getBoard(HttpSession session, Model model) {
+    public String getBoard(HttpSession session, Model model, @RequestParam(defaultValue = "1") int curPage) {
+        int countContents = boardService.forPaging();
+        Pagination.BLOCK_SCALE = 5;
+        Pagination.PAGE_SCALE = 3;
+        Pagination pagination = new Pagination(countContents, curPage);
+        logger.info(countContents + "카운트 콘텐츠 알려줘");
+
+        int start = pagination.getPageBegin();
+        int end = pagination.getPageEnd();
+        logger.info(start + "스타트값" + end +"end값");
         MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
         if(memberDTO == null) {
             logger.info("컨트롤러-getBoard");
         }else {
             model.addAttribute("login_info", memberDTO);
         }
-        model.addAttribute("board", boardService.getBoardList());
+//        model.addAttribute("board", boardService.getBoardList());
+        logger.info(start + "스타트값" + end +"end값");
+        model.addAttribute("board", boardService.getPagingBoard(start, end));
+        logger.info("맞게 조회되나 보자" +
+                ""+boardService.getPagingBoard(start, end));
         return "board-list";
     }
 

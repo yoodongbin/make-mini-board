@@ -5,6 +5,28 @@
         select * from boards
     </select>
 
+    <select id="getPagingBoard" resultType="com.example.dto.BoardDTO">
+        <include refid="pagingHeader">
+        </include>
+        select *, @ROWNUM:=0 from boards
+        <include refid="pagingFooter">
+            <property name="start" value="start"/>
+            <property name="end" value="end"/>
+        </include>
+    </select>
+
+    <!-- paging을 위해 rownum함수를 이용한 것 ! -->
+    <sql id="pagingHeader">
+        select * from (
+        select @rownum:=@rownum+1 as rn, boards.* from (
+    </sql>
+
+    <sql id="pagingFooter">
+        )boards
+        )boards where rn between #{start} and #{end}
+    </sql>
+
+
     <insert id="setBoard" parameterType="com.example.dto.BoardDTO">
         insert into boards (board_seq, member_seq, title, board_contents, create_date)
         values(board_seq, #{member_seq}, #{title}, #{board_contents}, now())
@@ -32,7 +54,7 @@
         where board_seq = #{board_seq}
     </update>
 
-    <select id="forPaging" resultType="com.example.dto.BoardDTO">
+    <select id="forPaging" resultType="int">
         select count(title) from boards
     </select>
 
@@ -50,6 +72,12 @@
         select z.comment_seq, z.board_seq, z.member_seq, m.name, z.comment_contents, z.create_date
         from member m, (select * from comments where board_seq = #{board_seq}) z
         where m.member_seq = z.member_seq
+    </select>
+
+    <select id="countOfComments" resultType="int">
+        select count(comment_seq)
+        from comments
+        where board_seq = #{board_seq}
     </select>
 
     <insert id="setReplyBoard" parameterType="com.example.dto.BoardDTO">
@@ -70,4 +98,6 @@
         from boards
         where title like concat('%',#{keyword},'%')
     </select>
+
+
 </mapper>

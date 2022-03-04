@@ -36,6 +36,24 @@
             <header th:replace="fragment/main_header :: header"></header>
             <!-- include content here !! -->
             <div layout:fragment="content"></div>
+
+<!--페이징 추가 이제 이걸 list 수에 맞춰서 조작하기만 하면 됨 !!!-->
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <ul class="pagination">
+                            <li class="page-item"><a class="page-link" href="?curPage=1">Previous</a></li>
+                            <li class="page-item"><a class="page-link" href="?curPage=1">1</a></li>
+                            <li class="page-item"><a class="page-link" href="?curPage=2">2</a></li>
+                            <li class="page-item"><a class="page-link" href="?curPage=3">3</a></li>
+                            <li class="page-item"><a class="page-link" href="?curPage=4">4</a></li>
+                            <li class="page-item"><a class="page-link" href="?curPage=5">5</a></li>
+                            <li class="page-item"><a class="page-link" href="?curPage=6">Next</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+<!--      페이징 인덱스용 ! 수정해야합니다 220304_17:50      -->
         </div>
         <!-- End Main Content -->
 
@@ -46,7 +64,24 @@
     </div>
     <!-- End Content Wrapper -->
 </div>
-
+<!--logout !!!!!!!!!!!!!!!!!!!!!!!!!-->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="exampleModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="try-login">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="/bootstrap/vendor/jquery/jquery.min.js"></script>
 <script src="/bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

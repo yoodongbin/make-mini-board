@@ -1,18 +1,34 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{layouts/main_layout}">
+
+<div class="container-fluid" layout:fragment="content" >
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
 <form action="member-post" method="post" enctype="multipart/form-data">
-    이   름 : <input type="text" name="name" size="10"><br>
-    이 메 일 : <input type="text" name="email" size="10">
-    <input type="button" value="중복확인" size="10">
-    <br>
-    비밀번호 : <input type="password" name="pwd">
-    <br>
-    <input type="submit" value="회원 가입">
+    <div class="mb-3">
+        <label class="form-label">Name</label>
+        <input type="text" class="form-control" name="name" size="10" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Email address</label>
+        <input type="text" class="form-control" name="email" size="10" required>
+    </div>
+
+
+
+    <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-control" name="password"  required>
+    </div>
+    <button type="submit" class="btn btn-primary">회원가입</button>
 </form>
+    <br>
+    <input class="btn btn-primary" type="button" value="목록으로 돌아가기" th:onclick="location.href='/board-list'">
 </body>
+</div>
 </html>

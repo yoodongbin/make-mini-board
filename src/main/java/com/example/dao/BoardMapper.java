@@ -10,6 +10,8 @@ public interface BoardMapper {
 
     public List<BoardDTO> getBoard();
 
+    public List<BoardDTO> getPagingBoard(int start, int end);
+
     public void setBoard(BoardDTO boardDTO);
 
     public BoardDTO findBoardBySeq(int board_seq);

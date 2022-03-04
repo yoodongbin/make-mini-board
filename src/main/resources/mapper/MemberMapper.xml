@@ -10,7 +10,7 @@
     </select>
 
     <insert id="setMember" parameterType="com.example.dto.MemberDTO">
-        insert into member values(member_seq, #{name}, #{email}, #{password})
+        insert into member values(member_seq, #{name}, #{email}, #{password} , null,now())
     </insert>
 
 <!--login-->
@@ -18,7 +18,7 @@
         select member_seq, name, email, password, birthdate, create_date
         from member
         where email= #{email}
-        and password= #{password}
+        and BINARY(password)= #{password}
     </select>
 
 <!--    이메일 중복체크-->

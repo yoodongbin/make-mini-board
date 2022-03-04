@@ -9,8 +9,8 @@
     <title>Title</title>
 </head>
 <body>
-게시글 상세보기 화면입니다. <br>
-<table>
+게시글 상세보기 화면입니다. <br><br>
+<table class="table" >
     <tbody  th:each="m : ${detail}">
         <tr>
             <th>제  목</th>
@@ -22,6 +22,8 @@
         </tr>
     </tbody>
 </table>
+<br>
+<input type="button" class="btn btn-primary mb-3" value="목록으로 돌아가기" th:onclick="location.href='/board-list'">
 <span th:if="${member_info.member_seq == detail.member_seq}">
     <input type="button" class="btn btn-primary mb-3" value="수정" th:onclick="location.href='/update-board?board_seq=[[${detail.board_seq}]]'">
     <input type="button" class="btn btn-primary mb-3" value="답글" th:onclick="location.href='/board-reply-input?board_seq=[[${detail.board_seq}]]'">
@@ -41,17 +43,17 @@
 <tr>
     <td th:text="${m.comment_contents}"></td>
     <td th:text="${m.create_date}"></td>
+<!--    <td th:text="${m.name}"></td>-->
 <!--    자신이 작성한 댓글에만 삭제버튼활성화-->
-    <span th:if="${member_info.member_seq == m.member_seq}">
+    <td th:if="${member_info.member_seq == m.member_seq}">
         <input type="button" value="댓글 삭제" th:onclick="location.href='/delete-comment?comment_seq=[[${m.comment_seq}]]'">
-    </span>
+    </td>
     <br>
 </tr>
 
 
 </table>
-    <br>
-    <input type="button" class="btn btn-primary mb-3" value="목록으로 돌아가기" th:onclick="location.href='/board-list'">
+
 </body>
 </div>
 </html>

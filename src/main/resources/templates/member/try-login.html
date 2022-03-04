@@ -9,19 +9,25 @@
     <title>로그인시도</title>
 </head>
 <body>
-<form action="member-login" method="post" enctype="multipart/form-data">
-    <div class="mb-3">
-        <label class="form-label">Email address</label>
-        <input type="text" class="form-control" name="email" size="10">
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Password</label>
-        <input type="password" class="form-control" name="password">
-    </div>
-    <button type="submit" class="btn btn-primary">login</button>
-</form>
-<br>
-<input class="btn btn-primary" type="button" value="목록으로 돌아가기" th:onclick="location.href='/board-list'">
+    <form action="member-login" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label class="form-label">Email address</label>
+            <input type="text" class="form-control" name="email" size="10" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-control" name="password" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">login</button>
+
+    </form>
+
+
+    <input class="btn btn-primary" type="button" value="회원가입" th:onclick="location.href='/member-input'">
+    <br>
+    <input class="btn btn-primary" type="button" value="목록으로 돌아가기" th:onclick="location.href='/board-list'">
+
 </body>
 </div>
 </html>

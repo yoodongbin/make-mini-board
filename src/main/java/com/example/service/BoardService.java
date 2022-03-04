@@ -25,6 +25,11 @@ public class BoardService {
         return boardDTOList;
     }
 
+    public List<BoardDTO> getPagingBoard (int start, int end) {
+        List<BoardDTO> pagingBoardList = boardMapper.getPagingBoard(start, end);
+        return pagingBoardList;
+    }
+
     public List<BoardDTO> searchForKeyword(String keyword){
         List<BoardDTO> searchList = boardMapper.searchForKeyword(keyword);
         System.out.println(searchList);
@@ -41,6 +46,11 @@ public class BoardService {
     public BoardDTO findByBoardSeq(Integer boardSeq) {
         BoardDTO boardDTO = boardMapper.findBoardBySeq(boardSeq);
         return  boardDTO;
+    }
+
+    public int forPaging() {
+        int boardCount = boardMapper.forPaging();
+        return boardCount;
     }
 
     public BoardDTO setReplyBoard(Integer memberSeq, Integer parentSeq, BoardDTO boardDTO) {
