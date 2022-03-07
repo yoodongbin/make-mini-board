@@ -37,19 +37,26 @@
             <!-- include content here !! -->
             <div layout:fragment="content"></div>
 
-<!--페이징 추가 이제 이걸 list 수에 맞춰서 조작하기만 하면 됨 !!!-->
+            <!--페이징 추가 이제 이걸 list 수에 맞춰서 조작하기만 하면 됨 !!!-->
             <div class="container" th:each="m, n : ${paging}">
                 <div class="row">
                     <div class="col">
                         <ul class="pagination">
-                            <span th:text="${m}"></span>
-                            <li class="page-item"><a class="page-link" th:href="@{?curPage=${m.curPage}}">Previous</a></li>
-                            <li class="page-item"><a class="page-link" th:href="@{?curPage=${m.curPage}}" th:text="${m.curPage}">1</a></li>
-                            <li class="page-item"><a class="page-link" href="?curPage=2">2</a></li>
-                            <li class="page-item"><a class="page-link" href="?curPage=3">3</a></li>
-                            <li class="page-item"><a class="page-link" href="?curPage=4">4</a></li>
-                            <li class="page-item"><a class="page-link" href="?curPage=5">5</a></li>
-                            <li class="page-item"><a class="page-link" href="?curPage=6">Next</a></li>
+                            <span th:if="${paging.blockBegin}-1 > 0">
+                                <li class="page-item"><a class="page-link" th:href="@{/board-list(curPage=${paging.blockBegin}-1)}" th:text="이전"></a></li>
+                            </span>
+                            <span th:unless="${paging.blockBegin}-1 > 0">
+                                <li class="page-item"><a class="page-link" th:href="@{/board-list(curPage=1)}" th:text="이전"></a></li>
+                            </span>
+                            <th:block th:each="num: ${#numbers.sequence(paging.blockBegin,paging.blockEnd)}">
+                                <li class="page-item"><a class="page-link" th:href="@{/board-list(curPage=${num})}" th:text="${num}"></a></li>
+                            </th:block>
+                            <span th:if="${paging.totPage  >  paging.blockEnd}">
+                                <li class="page-item"><a class="page-link" th:href="@{/board-list(curPage=${paging.blockEnd}+1)}" th:text="다음"></a></li>
+                            </span>
+                            <span th:unless="${paging.totPage  >  paging.blockEnd}">
+                                <li class="page-item"><a class="page-link" th:href="@{/board-list(curPage=${paging.totPage})}" th:text="다음"></a></li>
+                            </span>
                         </ul>
                     </div>
                 </div>

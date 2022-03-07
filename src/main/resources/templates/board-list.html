@@ -7,8 +7,8 @@
 <div class="container-fluid" layout:fragment="content" >
 <!--<h1 th:value="${member.getName}"></h1>-->
     <span th:if="${login_info == null}">
-<input type="button" value="로그인" th:onclick="location.href='/try-login'">
-        </span>
+        <input type="button" value="로그인" th:onclick="location.href='/try-login'">
+    </span>
     <span th:unless="${login_info == null}">
         <span th:text="|Hello, ${login_info.name} ~|"></span>
         <input type="button" value="게시글쓰기" class="btn btn-primary mb-3" th:onclick="location.href='/board-input'">
@@ -25,7 +25,7 @@
     </thead>
     <tbody>
         <tr th:each="m, n : ${board}">
-            <td th:text="${n.count}"></td>
+            <td th:text="${paging.pageBegin}+${n.index}"></td>
             <td>
                 <a th:href="@{/board-detail(board_seq=${m.board_seq})}" th:text="${m.title}"></a>
             </td>
