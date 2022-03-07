@@ -38,12 +38,8 @@ public class BoardController {
         Pagination.BLOCK_SCALE = 5;
         Pagination.PAGE_SCALE = 3;
         Pagination pagination = new Pagination(countContents, curPage);
-        logger.info(countContents + "카운트 콘텐츠 알려줘");
-//여기서 end는 끝값이 아니라 얼만큼 출력할지를 나타낼 것 !
         int start = pagination.getPageBegin();
         int end = Pagination.PAGE_SCALE;
-//        int end = pagination.getPageEnd();
-        logger.info(start + "스타트값" + end +"end값");
         MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
         if(memberDTO == null) {
             logger.info("컨트롤러-getBoard");
@@ -51,10 +47,7 @@ public class BoardController {
             model.addAttribute("login_info", memberDTO);
         }
 //        model.addAttribute("board", boardService.getBoardList());
-        logger.info(start + "스타트값" + end +"end값");
         model.addAttribute("board", boardService.getPagingBoard(start, end));
-        logger.info("맞게 조회되나 보자" +
-                ""+boardService.getPagingBoard(start, end));
         return "board-list";
     }
 
