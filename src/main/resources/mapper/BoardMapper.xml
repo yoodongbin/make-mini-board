@@ -2,34 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.dao.BoardMapper">
     <select id="getBoard" resultType="com.example.dto.BoardDTO">
-        select * from boards
+        select
+        board_seq, title, board_contents, create_date, modify_date,
+        member_seq, view, parent_seq
+        from boards
     </select>
-<!--세상 쉬움 !-->
-        <select id="getPagingBoard" resultType="com.example.dto.BoardDTO">
-            select * from boards limit #{start}, #{end}
-        </select>
 
-<!--    <select id="getPagingBoard" resultType="com.example.dto.BoardDTO">-->
-<!--        <include refid="pagingHeader">-->
-<!--        </include>-->
-<!--        select *, @ROWNUM:=0 from boards-->
-<!--        <include refid="pagingFooter">-->
-<!--            <property name="start" value="start"/>-->
-<!--            <property name="end" value="end"/>-->
-<!--        </include>-->
-<!--    </select>-->
-
-<!--    &lt;!&ndash; paging을 위해 rownum함수를 이용한 것 ! &ndash;&gt;-->
-<!--    <sql id="pagingHeader">-->
-<!--        select * from (-->
-<!--        select @rownum:=@rownum+1 as rn, boards.* from (-->
-<!--    </sql>-->
-
-<!--    <sql id="pagingFooter">-->
-<!--        )boards-->
-<!--        )boards where rn between #{start} and #{end}-->
-<!--    </sql>-->
-
+<!--    페이징
+        원래는 include를 사용했는데 "일반적으로 mysql 에서는 limit를 사용 합니다."
+        하여 수정 완료 함-->
+    <select id="getPagingBoard" resultType="com.example.dto.BoardDTO">
+        select
+        board_seq, title, board_contents, create_date, modify_date,
+        member_seq, view, parent_seq
+        from boards limit #{start}, #{end}
+    </select>
 
     <insert id="setBoard" parameterType="com.example.dto.BoardDTO">
         insert into boards (board_seq, member_seq, title, board_contents, create_date)
@@ -98,7 +85,9 @@
     </select>
 
     <select id="searchForKeyword" resultType="com.example.dto.BoardDTO">
-        select *
+        select
+        board_seq, title, board_contents, create_date, modify_date,
+        member_seq, view, parent_seq
         from boards
         where title like concat('%',#{keyword},'%')
     </select>

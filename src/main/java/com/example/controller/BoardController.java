@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-
 @Controller
 public class BoardController {
     //로그
@@ -35,26 +34,21 @@ public class BoardController {
     @GetMapping(value = "/board-list")
     public String getBoard(HttpSession session, Model model, @RequestParam(defaultValue = "1") int curPage) {
         int countContents = boardService.forPaging();
-        Pagination.BLOCK_SCALE = 5;
-        Pagination.PAGE_SCALE = 3;
+//        한 페이지에 몇개씩 보여야 하는지
+        Pagination.PAGE_SCALE = 10;
+//        몇개의 블록씩 페이지에 표시할 건지 !
+        Pagination.BLOCK_SCALE = 3;
         Pagination pagination = new Pagination(countContents, curPage);
-        logger.info(countContents + "카운트 콘텐츠 알려줘");
-//여기서 end는 끝값이 아니라 얼만큼 출력할지를 나타낼 것 !
         int start = pagination.getPageBegin();
         int end = Pagination.PAGE_SCALE;
-//        int end = pagination.getPageEnd();
-        logger.info(start + "스타트값" + end +"end값");
         MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
         if(memberDTO == null) {
             logger.info("컨트롤러-getBoard");
         }else {
             model.addAttribute("login_info", memberDTO);
         }
-//        model.addAttribute("board", boardService.getBoardList());
-        logger.info(start + "스타트값" + end +"end값");
         model.addAttribute("board", boardService.getPagingBoard(start, end));
-        logger.info("맞게 조회되나 보자" +
-                ""+boardService.getPagingBoard(start, end));
+        model.addAttribute("paging", pagination);
         return "board-list";
     }
 
@@ -68,17 +62,6 @@ public class BoardController {
             return "board-input";
         }
     }
-//-----------------------------------서비스 이용 본보기-----------------------------------------------
-//    //게시글 insert
-//    @RequestMapping(value = "/board-post", method = {RequestMethod.POST, RequestMethod.GET})
-//    public String setBoard(HttpServletRequest httpServletRequest, BoardDTO boardDTO, Model model) {
-//        HttpSession session = httpServletRequest.getSession();
-//        MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
-//        int m_seq = memberDTO.getMember_seq();
-//        boardDTO.setMember_seq(m_seq);
-//        mapper.setBoard(boardDTO);
-//        return "board-post";
-//    }
 
     //게시글 insert
     @PostMapping(value = "/board-post")
@@ -88,7 +71,6 @@ public class BoardController {
 
         return "board-post";
     }
-//-----------------------------------서비스 이용 본보기-----------------------------------------------
 
     //게시글 상세보기 and 댓글기능 !
     @GetMapping(value = "/board-detail")
