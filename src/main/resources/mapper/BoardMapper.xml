@@ -2,14 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.dao.BoardMapper">
     <select id="getBoard" resultType="com.example.dto.BoardDTO">
-        select * from boards
+        select
+        board_seq, title, board_contents, create_date, modify_date,
+        member_seq, view, parent_seq
+        from boards
     </select>
 
 <!--    페이징
         원래는 include를 사용했는데 "일반적으로 mysql 에서는 limit를 사용 합니다."
         하여 수정 완료 함-->
     <select id="getPagingBoard" resultType="com.example.dto.BoardDTO">
-        select * from boards limit #{start}, #{end}
+        select
+        board_seq, title, board_contents, create_date, modify_date,
+        member_seq, view, parent_seq
+        from boards limit #{start}, #{end}
     </select>
 
     <insert id="setBoard" parameterType="com.example.dto.BoardDTO">
@@ -79,7 +85,9 @@
     </select>
 
     <select id="searchForKeyword" resultType="com.example.dto.BoardDTO">
-        select *
+        select
+        board_seq, title, board_contents, create_date, modify_date,
+        member_seq, view, parent_seq
         from boards
         where title like concat('%',#{keyword},'%')
     </select>
