@@ -22,7 +22,7 @@ public class Pagination {
         private int nextBlock; //다음 페이지 블록
         //where rn between #{start} and #{end}
         private int pageBegin; //#{start}
-        private int pageEnd; //#{end}
+//        private int pageEnd; //#{end}
         // [이전] blockBegin -> 41 42 43 44 45 46 47 48 49 50 [다음]
         private int blockBegin; //현재 페이지 블록의 시작번호
 
@@ -63,7 +63,7 @@ public class Pagination {
         public void setPageRange() {
                 //where rn between #{start} and #{end}
                 pageBegin = (curPage-1) * PAGE_SCALE+1; //시작번호
-                pageEnd = pageBegin+PAGE_SCALE-1; //끝번호
+//                pageEnd = pageBegin+PAGE_SCALE-1; //끝번호
         }
 
 }

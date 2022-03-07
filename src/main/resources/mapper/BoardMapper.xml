@@ -4,27 +4,31 @@
     <select id="getBoard" resultType="com.example.dto.BoardDTO">
         select * from boards
     </select>
+<!--세상 쉬움 !-->
+        <select id="getPagingBoard" resultType="com.example.dto.BoardDTO">
+            select * from boards limit #{start}, #{end}
+        </select>
 
-    <select id="getPagingBoard" resultType="com.example.dto.BoardDTO">
-        <include refid="pagingHeader">
-        </include>
-        select *, @ROWNUM:=0 from boards
-        <include refid="pagingFooter">
-            <property name="start" value="start"/>
-            <property name="end" value="end"/>
-        </include>
-    </select>
+<!--    <select id="getPagingBoard" resultType="com.example.dto.BoardDTO">-->
+<!--        <include refid="pagingHeader">-->
+<!--        </include>-->
+<!--        select *, @ROWNUM:=0 from boards-->
+<!--        <include refid="pagingFooter">-->
+<!--            <property name="start" value="start"/>-->
+<!--            <property name="end" value="end"/>-->
+<!--        </include>-->
+<!--    </select>-->
 
-    <!-- paging을 위해 rownum함수를 이용한 것 ! -->
-    <sql id="pagingHeader">
-        select * from (
-        select @rownum:=@rownum+1 as rn, boards.* from (
-    </sql>
+<!--    &lt;!&ndash; paging을 위해 rownum함수를 이용한 것 ! &ndash;&gt;-->
+<!--    <sql id="pagingHeader">-->
+<!--        select * from (-->
+<!--        select @rownum:=@rownum+1 as rn, boards.* from (-->
+<!--    </sql>-->
 
-    <sql id="pagingFooter">
-        )boards
-        )boards where rn between #{start} and #{end}
-    </sql>
+<!--    <sql id="pagingFooter">-->
+<!--        )boards-->
+<!--        )boards where rn between #{start} and #{end}-->
+<!--    </sql>-->
 
 
     <insert id="setBoard" parameterType="com.example.dto.BoardDTO">

@@ -39,9 +39,10 @@ public class BoardController {
         Pagination.PAGE_SCALE = 3;
         Pagination pagination = new Pagination(countContents, curPage);
         logger.info(countContents + "카운트 콘텐츠 알려줘");
-
+//여기서 end는 끝값이 아니라 얼만큼 출력할지를 나타낼 것 !
         int start = pagination.getPageBegin();
-        int end = pagination.getPageEnd();
+        int end = Pagination.PAGE_SCALE;
+//        int end = pagination.getPageEnd();
         logger.info(start + "스타트값" + end +"end값");
         MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
         if(memberDTO == null) {
