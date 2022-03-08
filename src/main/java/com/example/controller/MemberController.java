@@ -9,14 +9,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 
 @Controller
 public class MemberController {
@@ -34,11 +31,10 @@ public class MemberController {
 
     //전체 게시글 출력, 게시글 main 화면
     @GetMapping(value = "/member-list")
-    public String getMember(Model model) {
-        logger.info("컨트롤러-getMember");
-
-        model.addAttribute("member", mapper.getMembers());
-        return "member/member-list";
+    public ModelAndView getMember(ModelAndView model) {
+        model.addObject("member",memberService.getMembers());
+        model.setViewName("member/member-list");
+        return model;
     }
 
     //insert form
@@ -47,45 +43,24 @@ public class MemberController {
         return "member/member-input";
     }
 
-//    //회원 insert
-//    @PostMapping(value = "/member-post")
-//    public String setMember(MemberDTO memberDTO, Model model) {
-//        if(memberDTO.getEmail().isEmpty()) {
-//            return "member/member-input";
-//        } else {
-//            int emailDuplication = mapper.checkDuplication(memberDTO);
-//            logger.info(emailDuplication + "이메일 중복값 얼마게 ?");
-//
-//            if (emailDuplication > 0) {
-//                Message message = new Message("이메일이 중복됩니다.","message");
-//                model.addAttribute("data", message);
-//
-//                return "member/try-login";
-//            } else {
-//                mapper.setMember(memberDTO);
-//                return "member/member-post";
-//            }
-//        }
-//    }
-//회원 insert
-@PostMapping(value = "/member-post")
-public ModelAndView setMember(MemberDTO memberDTO, ModelAndView model) {
-    if(memberDTO.getEmail().isEmpty()) {
-        model.setViewName("member/member-input");
-    } else {
-        int emailDuplication = mapper.checkDuplication(memberDTO);
-        if (emailDuplication > 0) {
-            Message message = new Message("이메일이 중복됩니다.","member-input");
-            model.addObject("data", message);
-            model.setViewName("message");
+    //회원 insert
+    @PostMapping(value = "/member-post")
+    public ModelAndView setMember(MemberDTO memberDTO, ModelAndView model) {
+        if(memberDTO.getEmail().isEmpty()) {
+            model.setViewName("member/member-input");
         } else {
-            mapper.setMember(memberDTO);
-            model.setViewName("member/member-post");
+            int emailDuplication = memberService.checkDuplication(memberDTO);
+            if (emailDuplication > 0) {
+                Message message = new Message("이메일이 중복됩니다.","member-input");
+                model.addObject("data", message);
+                model.setViewName("message");
+            } else {
+                mapper.setMember(memberDTO);
+                model.setViewName("member/member-post");
+            }
         }
-
+        return model;
     }
-    return model;
-}
 
     // 로그인페이지 이동
     @GetMapping("/try-login")
@@ -101,21 +76,19 @@ public ModelAndView setMember(MemberDTO memberDTO, ModelAndView model) {
     }
     //로그인
     @RequestMapping(value = "/member-login",  method = {RequestMethod.GET, RequestMethod.POST})
-    public String loginPost(HttpServletRequest httpServletRequest, @ModelAttribute("member") MemberDTO memberDTO, RedirectAttributes rttr, Error error) {
+    public ModelAndView loginPost(HttpServletRequest httpServletRequest, @ModelAttribute("member") MemberDTO memberDTO, ModelAndView model) {
         //세션
         HttpSession session = httpServletRequest.getSession();
         MemberDTO login = mapper.loginMember(memberDTO);
-
             if (login == null) {
-                rttr.addFlashAttribute("msg", false);
-
-                return "redirect:/try-login";
+                Message message = new Message("이메일 또는 패스워드가 틀립니다.", "try-login");
+                model.addObject("data", message);
+                model.setViewName("message");
             } else {
-                String returnURL = httpServletRequest.getParameter("returnURL");
                 session.setAttribute("login", login);
                 SessionUtil.setLoginMemberId(session, memberDTO.getEmail());
-                return "redirect:/board-list";
+                model.setViewName("redirect:/board-list");
             }
-
+            return model;
     }
 }

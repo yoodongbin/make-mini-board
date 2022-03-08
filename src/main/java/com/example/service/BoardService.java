@@ -1,8 +1,10 @@
 package com.example.service;
 
 import com.example.dao.BoardMapper;
+import com.example.dao.CommentMapper;
 import com.example.dao.MemberMapper;
 import com.example.dto.BoardDTO;
+import com.example.dto.CommentDTO;
 import com.example.dto.MemberDTO;
 import org.springframework.stereotype.Service;
 
@@ -13,16 +15,22 @@ public class BoardService {
 
     private BoardMapper boardMapper;
     private MemberMapper memberMapper;
+    private CommentMapper commentMapper;
 
-    public BoardService(BoardMapper boardMapper, MemberMapper memberMapper) {
+    public BoardService(BoardMapper boardMapper, MemberMapper memberMapper, CommentMapper commentMapper) {
         this.boardMapper = boardMapper;
         this.memberMapper = memberMapper;
+        this.commentMapper = commentMapper;
     }
 
     public List<BoardDTO> getBoardList() {
         List<BoardDTO> boardDTOList = boardMapper.getBoard();
 
         return boardDTOList;
+    }
+
+    public void setBoard(BoardDTO boardDTO) {
+        boardMapper.setBoard(boardDTO);
     }
 
     public List<BoardDTO> getPagingBoard (int start, int end) {
@@ -65,5 +73,15 @@ public class BoardService {
         int replyCount = boardMapper.findReplyBoardBySeq(boardSeq);
         return replyCount;
     }
+
+    public void viewCount(int board_seq) {
+        boardMapper.viewCount(board_seq);
+    }
+
+    public List<CommentDTO> joinComment(int board_seq) {
+        List<CommentDTO> joinComment = boardMapper.joinComment(board_seq);
+        return joinComment;
+    }
+
 
 }
