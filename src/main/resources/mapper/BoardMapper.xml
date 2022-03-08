@@ -15,7 +15,9 @@
         select
         board_seq, title, board_contents, create_date, modify_date,
         member_seq, view, parent_seq
-        from boards limit #{start}, #{end}
+        from boards
+        order by group_num, board_level
+        limit #{start}, #{end}
     </select>
 
     <insert id="setBoard" parameterType="com.example.dto.BoardDTO">
@@ -23,8 +25,18 @@
         values(board_seq, #{member_seq}, #{title}, #{board_contents}, now())
     </insert>
 
+    <select id="forGroupNum" resultType="com.example.dto.BoardDTO">
+        select board_seq, title, group_num from boards where board_seq = last_insert_id()
+    </select>
+
+    <update id="setGroupNum" parameterType="com.example.dto.BoardDTO">
+        update boards
+        SET GROUP_NUM = #{board_seq}
+        WHERE board_seq = #{board_seq}
+    </update>
+
     <select id="findBoardBySeq" resultType="com.example.dto.BoardDTO">
-        select board_seq, member_seq, title, board_contents, create_date, view
+        select board_seq, member_seq, title, board_contents, create_date, view, group_num, board_level
         from boards where board_seq = #{board_seq}
     </select>
 
@@ -72,8 +84,8 @@
     </select>
 
     <insert id="setReplyBoard" parameterType="com.example.dto.BoardDTO">
-        insert into boards (board_seq, member_seq, title, board_contents, parent_seq, create_date)
-        values(board_seq, #{member_seq}, #{title}, #{board_contents}, #{parent_seq}, now())
+        insert into boards (board_seq, member_seq, title, board_contents, parent_seq, create_date, group_num, board_level)
+        values(board_seq, #{member_seq}, #{title}, #{board_contents}, #{parent_seq}, now(), #{group_num}, #{board_level})
     </insert>
 
 <!--    해당 게시물의 답글 갯수 카운팅해줌-->

@@ -25,16 +25,13 @@ public class BoardService {
 
     public List<BoardDTO> getBoardList() {
         List<BoardDTO> boardDTOList = boardMapper.getBoard();
-
         return boardDTOList;
-    }
-
-    public void setBoard(BoardDTO boardDTO) {
-        boardMapper.setBoard(boardDTO);
     }
 
     public List<BoardDTO> getPagingBoard (int start, int end) {
         List<BoardDTO> pagingBoardList = boardMapper.getPagingBoard(start, end);
+//        작성자이름 부릉부릉하다가 끝
+        pagingBoardList.forEach(s-> System.out.println(memberMapper.getMember(s.getMember_seq())));
         return pagingBoardList;
     }
 
@@ -49,6 +46,15 @@ public class BoardService {
         BoardMapper boardMapper = this.boardMapper;
         boardMapper.setBoard(boardDTO);
         return boardDTO;
+    }
+
+    public BoardDTO forGroupNum() {
+        BoardDTO groupNum = boardMapper.forGroupNum();
+        return groupNum;
+    }
+
+    public void setGroupNum(Integer boardSeq) {
+        boardMapper.setGroupNum(boardSeq);
     }
 
     public BoardDTO findByBoardSeq(Integer boardSeq) {

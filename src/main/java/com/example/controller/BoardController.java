@@ -40,7 +40,7 @@ public class BoardController {
 //        몇개의 블록씩 페이지에 표시할 건지 !
         Pagination.BLOCK_SCALE = 3;
         Pagination pagination = new Pagination(countContents, curPage);
-        int start = pagination.getPageBegin();
+        int start = pagination.getPageBegin()-1;
         int end = Pagination.PAGE_SCALE;
         MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
         if(memberDTO == null) {
@@ -68,9 +68,13 @@ public class BoardController {
     public ModelAndView setBoardV2(HttpSession session, BoardDTO boardDTO, ModelAndView model) {
         MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
         boardService.saveBoard(memberDTO.getMember_seq(), boardDTO);
+        BoardDTO boardDTO1 = boardService.forGroupNum();
+        logger.info(boardDTO1 + "이거 뭘까 ?");
+        boardService.setGroupNum(boardDTO1.getBoard_seq());
         Message message = new Message("게시글이 등록됐습니다.", "board-list");
         model.addObject("data", message);
         model.setViewName("message");
+
         return model;
     }
     //게시글 상세보기 and 댓글기능 !
@@ -93,16 +97,21 @@ public class BoardController {
 
     //게시글 삭제하기
     @GetMapping(value = "/delete-board")
-    public String deleteBoard(@RequestParam("board_seq") int board_seq) {
+    public ModelAndView deleteBoard(@RequestParam("board_seq") int board_seq, ModelAndView model) {
         int countComments = mapper.countOfComments(board_seq);
         int countReply = boardService.findReplyBoardBySeq(board_seq);
         if(countComments == 0 && countReply == 0) {
             mapper.deleteBoardBySeq(board_seq);
             mapper.getBoard();
+            Message message = new Message("삭제했습니다.", "board-list");
+            model.addObject("data", message);
+            model.setViewName("message");
         } else {
-            logger.info("댓글과 답글이 있는 게시글은 삭제할 수 없습니다.");
+            Message message = new Message("댓글과 답글이 있는 게시글은 삭제할 수 없습니다.", "board-list");
+            model.addObject("data", message);
+            model.setViewName("message");
         }
-        return "redirect:/board-list";
+        return model;
     }
 
     //게시글 수정하기
@@ -138,9 +147,13 @@ public class BoardController {
     public ModelAndView setReplyBoard(HttpSession session, BoardDTO boardDTO, ModelAndView model) {
         MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
         BoardDTO detail_bo = (BoardDTO) session.getAttribute("b_detail");
+
         boardService.findReplyBoardBySeq(detail_bo.getBoard_seq());
-        String titles = detail_bo.getTitle()+"("+boardService.findReplyBoardBySeq(detail_bo.getBoard_seq())+")";
+        String titles = "->"+detail_bo.getTitle()+"("+boardService.findReplyBoardBySeq(detail_bo.getBoard_seq())+")";
         boardDTO.setTitle(titles);
+
+        boardDTO.setGroup_num(detail_bo.getGroup_num());
+        boardDTO.setBoard_level((detail_bo.getBoard_level())+1);
         boardService.setReplyBoard(memberDTO.getMember_seq(), detail_bo.getBoard_seq(), boardDTO);
         Message message = new Message("답글이 등록됐습니다.", "board-list");
         model.addObject("data", message);

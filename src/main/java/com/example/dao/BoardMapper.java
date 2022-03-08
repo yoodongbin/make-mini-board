@@ -14,6 +14,10 @@ public interface BoardMapper {
 
     public void setBoard(BoardDTO boardDTO);
 
+    public BoardDTO forGroupNum();
+
+    public void setGroupNum(int board_seq);
+
     public BoardDTO findBoardBySeq(int board_seq);
 
     public void deleteBoardBySeq(int board_seq);

@@ -22,6 +22,8 @@ create table board.boards
     member_seq  int not null,
     view int default 0,
     parent_seq int default 0,
+    group_num int default 0,
+    board_level int default 0,
     KEY member_seq (member_seq),
     FOREIGN KEY (member_seq) REFERENCES member (MEMBER_SEQ)
 ) comment '게시판 DB';
