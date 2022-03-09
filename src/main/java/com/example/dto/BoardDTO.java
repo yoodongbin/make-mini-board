@@ -14,7 +14,6 @@ import java.util.Date;
 @ToString
 @NoArgsConstructor
 public class BoardDTO {
-
     private int board_seq;
     private int member_seq;
     @NotBlank(message = "제목을 입력하세요.")
@@ -25,5 +24,6 @@ public class BoardDTO {
     private Date create_date;
     private int view;
     private int parent_seq;
-
+    private int group_num;
+    private int board_level;
 }

@@ -5,7 +5,7 @@
       layout:decorator="~{layouts/main_layout}">
 
 <div class="container-fluid" layout:fragment="content" >
-<!--<h1 th:value="${member.getName}"></h1>-->
+    <!--<h1 th:value="${member.getName}"></h1>-->
     <span th:if="${login_info == null}">
         <input type="button" value="로그인" th:onclick="location.href='/try-login'">
     </span>
@@ -14,16 +14,16 @@
         <input type="button" value="게시글쓰기" class="btn btn-primary mb-3" style='float: right;' th:onclick="location.href='/board-input'">
     </span>
 
-<table class="table">
-    <thead>
+    <table class="table">
+        <thead>
         <tr>
             <th>index</th>
             <th>제  목</th>
             <th>내  용</th>
             <th>조회수</th>
         </tr>
-    </thead>
-    <tbody>
+        </thead>
+        <tbody>
         <tr th:each="m, n : ${board}">
             <td th:text="${paging.pageBegin}+${n.index}"></td>
             <td>
@@ -32,7 +32,7 @@
             <td th:text="${m.board_contents}">s</td>
             <td th:text="${m.view}">s</td>
         </tr>
-    </tbody>
-</table>
+        </tbody>
+    </table>
 </div>
 </html>
