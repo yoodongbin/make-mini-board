@@ -42,7 +42,7 @@
             <div th:unless="${paging} == null">
                     <div class="row">
                         <div class="col">
-                            <ul class="pagination">
+                            <ul class="m-3 pagination">
 
                                 <span th:if="${paging.blockBegin}-1 > 0">
                                     <li class="page-item"><a class="page-link" th:href="@{/board-list(curPage=${paging.blockBegin}-1)}" th:text="이전"></a></li>
