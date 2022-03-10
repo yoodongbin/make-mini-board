@@ -1,14 +1,12 @@
 package com.example.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
+@Data
 @Getter
 @Setter
 @ToString
@@ -26,4 +24,6 @@ public class BoardDTO {
     private int parent_seq;
     private int group_num;
     private int board_level;
+    private CommentDTO commentDTO;
+    private MemberDTO memberDTO;
 }
