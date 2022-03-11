@@ -2,28 +2,40 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="~{layouts/main_layout}">
-
-<div class="container-fluid" layout:fragment="content" >
-    <div class="row">
-        <div class="col">
-            <form action="member-login" method="post" enctype="multipart/form-data">
-                <div class="mb-3">
-                    <label class="form-label">Email address</label>
-                    <input type="text" class="form-control" name="email" size="10" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Password</label>
-                    <input type="password" class="form-control" name="password" required>
-                </div>
-            </form>
+<body>
+    <div class="container-fluid" layout:fragment="content" >
+        <div class="row">
+            <div class="col">
+                <form method="post" id="signIn">
+                    <div class="mb-3">
+                        <label class="form-label">Email address</label>
+                        <input type="text" class="form-control" name="email" size="10" required value="bab@bab">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" name="password" required value="12">
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <button class="btn btn-primary" onclick="login()">login</button>
+                <input class="btn btn-primary" type="button" value="회원가입" th:onclick="location.href='/member-input'">
+                <input class="btn btn-primary" type="button" value="목록으로 돌아가기" th:onclick="location.href='/board-list'">
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col">
-            <button class="btn btn-primary" onclick="login()">login</button>
-            <input class="btn btn-primary" type="button" value="회원가입" th:onclick="location.href='/member-input'">
-            <input class="btn btn-primary" type="button" value="목록으로 돌아가기" th:onclick="location.href='/board-list'">
-        </div>
-    </div>
-</div>
+</body>
+<th:block layout:fragment="script">
+<script type="text/javascript">
+    function login(){
+        const form = document.getElementById("signIn");
+        /** validation here!!! **/
+        form.setAttribute("method", "post")
+        form.setAttribute("action", "member-login")
+        form.submit();
+    }
+</script>
+</th:block>
 </html>
