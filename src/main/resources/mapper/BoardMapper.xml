@@ -11,12 +11,13 @@
 <!--    페이징
         원래는 include를 사용했는데 "일반적으로 mysql 에서는 limit를 사용 합니다."
         하여 수정 완료 함-->
-    <select id="getPagingBoard" resultType="com.example.dto.BoardDTO">
+    <select id="getPagingBoard" resultType="com.example.dto.BoardDTO" resultMap="BoardDTO">
         select
-        board_seq, title, board_contents, create_date, modify_date,
-        member_seq, view, parent_seq
-        from boards
-        order by group_num, board_level
+        b.board_seq, b.title, b.board_contents, b.create_date, b.modify_date, m.name,
+        b.member_seq, b.view, b.parent_seq
+        from boards b, member m
+        where b.member_seq = m.member_seq
+        order by b.group_num, b.board_level
         limit #{start}, #{end}
     </select>
 
@@ -35,9 +36,21 @@
         WHERE board_seq = #{board_seq}
     </update>
 
-    <select id="findBoardBySeq" resultType="com.example.dto.BoardDTO">
-        select board_seq, member_seq, title, board_contents, create_date, view, group_num, board_level
-        from boards where board_seq = #{board_seq}
+    <resultMap id="BoardDTO" type="com.example.dto.BoardDTO">
+        <result column="board_seq" property="board_seq"></result>
+        <result column="member_seq" property="member_seq"></result>
+        <result column="title" property="title"></result>
+        <result column="board_contents" property="board_contents"></result>
+        <result column="create_date" property="create_date"></result>
+        <result column="view" property="view"></result>
+        <result column="group_num" property="group_num"></result>
+        <result column="board_level" property="board_level"></result>
+        <collection property="memberDTO" resultMap="MemberDTO"></collection>
+    </resultMap>
+
+    <select id="findBoardBySeq" resultType="com.example.dto.BoardDTO" resultMap="BoardDTO">
+        select b.board_seq, m.member_seq, b.title, b.board_contents, b.create_date, b.view, b.group_num, b.board_level, m.name
+        from boards b , member m  where b.member_seq = m.member_seq and b.board_seq = #{board_seq}
     </select>
 
     <update id="viewCount" parameterType="com.example.dto.BoardDTO">
@@ -61,17 +74,21 @@
         select count(title) from boards
     </select>
 
+    <resultMap id="MemberDTO" type="com.example.dto.MemberDTO">
+        <result column="name" property="name"></result>
+    </resultMap>
+
     <resultMap id="CommentDTO" type="com.example.dto.CommentDTO">
         <result column="comment_seq" property="comment_seq"></result>
         <result column="member_seq" property="member_seq"></result>
         <result column="board_seq" property="board_seq"></result>
-<!--        <result column="name" property="name"></result>-->
         <result column="comment_contents" property="comment_contents"></result>
         <result column="create_date" property="create_date"></result>
+        <collection property="memberDTO" resultMap="MemberDTO"></collection>
     </resultMap>
     
 <!--    상세보기에서 댓글도 같이 보이게끔 하기 ! -->
-    <select id="joinComment" parameterType="com.example.dto.MemberDTO"  resultMap="CommentDTO">
+    <select id="joinComment" parameterType="com.example.dto.CommentDTO"  resultMap="CommentDTO">
         select z.comment_seq, z.board_seq, z.member_seq, m.name, z.comment_contents, z.create_date
         from member m, (select * from comments where board_seq = #{board_seq}) z
         where m.member_seq = z.member_seq
@@ -96,12 +113,14 @@
         and parent_seq = #{board_seq}
     </select>
 
-    <select id="searchForKeyword" resultType="com.example.dto.BoardDTO">
+    <select id="searchForKeyword" resultType="com.example.dto.BoardDTO" resultMap="BoardDTO">
         select
-        board_seq, title, board_contents, create_date, modify_date,
-        member_seq, view, parent_seq
-        from boards
-        where title like concat('%',#{keyword},'%')
+        b.board_seq, b.title, b.board_contents, b.create_date, b.modify_date,
+        b.member_seq, b.view, b.parent_seq, m.name
+        from boards b, member m
+        where b.member_seq = m.member_seq
+        and
+        b.title like concat('%',#{keyword},'%')
     </select>
 
 

@@ -1,12 +1,10 @@
 package com.example.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
+@Data
 @Getter
 @Setter
 @ToString
@@ -18,4 +16,6 @@ public class CommentDTO {
     @NotBlank(message = "내용을 입력하세요.")
     private String comment_contents;
     private Date create_date;
+    private BoardDTO boardDTO;
+    private MemberDTO memberDTO;
 }
