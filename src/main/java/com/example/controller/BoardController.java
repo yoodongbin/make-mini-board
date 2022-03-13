@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.Null;
 
 @Controller
 public class BoardController {
@@ -69,7 +70,6 @@ public class BoardController {
         MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
         boardService.saveBoard(memberDTO.getMember_seq(), boardDTO);
         BoardDTO boardDTO1 = boardService.forGroupNum();
-        logger.info(boardDTO1 + "이거 뭘까 ?");
         boardService.setGroupNum(boardDTO1.getBoard_seq());
         Message message = new Message("게시글이 등록됐습니다.", "board-list");
         model.addObject("data", message);
@@ -83,15 +83,21 @@ public class BoardController {
         HttpSession session = httpServletRequest.getSession();
 
         MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
-        model.addObject("member_info", memberDTO);
-
-        boardService.viewCount(board_seq);
-        BoardDTO boardDTO = boardService.findByBoardSeq(board_seq);
-        model.addObject("detail", boardDTO);
-        //세션추가
-        session.setAttribute("b_detail",boardDTO);
-        //댓글 부분
-        model.addObject("comments", boardService.joinComment(board_seq));
+        if (memberDTO == null) {
+            Message message = new Message("로그인을 하셔야 볼 수 있습니다.", "try-login");
+            model.addObject("data", message);
+            model.setViewName("message");
+        }else {
+            model.addObject("member_info", memberDTO);
+            boardService.viewCount(board_seq);
+            BoardDTO boardDTO = boardService.findByBoardSeq(board_seq);
+            model.addObject("detail", boardDTO);
+            //세션추가
+            session.setAttribute("b_detail",boardDTO);
+            //댓글 부분
+            model.addObject("comments", boardService.joinComment(board_seq));
+            model.setViewName("board-detail");
+        }
         return model;
     }
 

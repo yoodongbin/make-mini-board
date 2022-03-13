@@ -18,8 +18,9 @@
         <thead>
         <tr>
             <th>index</th>
-            <th>제 목</th>
-            <th>내 용</th>
+            <th>제  목</th>
+            <th>내  용</th>
+            <th>작성자</th>
             <th>조회수</th>
         </tr>
         </thead>
@@ -30,6 +31,7 @@
                 <a th:href="@{/board-detail(board_seq=${m.board_seq})}" th:text="${m.title}"></a>
             </td>
             <td th:text="${m.board_contents}">s</td>
+            <td th:text="${m.memberDTO.name}">s</td>
             <td th:text="${m.view}">s</td>
         </tr>
         </tbody>
