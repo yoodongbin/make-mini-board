@@ -21,7 +21,7 @@
         <div class="row">
             <div class="col">
                 <button class="btn btn-primary" onclick="login()">login</button>
-                <input class="btn btn-primary" type="button" value="회원가입" th:onclick="location.href='/member-input'">
+                <button class="btn btn-primary" onclick="signup()">sign up</button>
                 <input class="btn btn-primary" type="button" value="목록으로 돌아가기" th:onclick="location.href='/board-list'">
             </div>
         </div>
@@ -34,6 +34,13 @@
         /** validation here!!! **/
         form.setAttribute("method", "post")
         form.setAttribute("action", "member-login")
+        form.submit();
+    }
+
+        function signup(){
+        const form = document.getElementById("signIn");
+        form.setAttribute("method", "get")
+        form.setAttribute("action", "member-input")
         form.submit();
     }
 </script>

@@ -39,7 +39,7 @@
 <br>
     <form action="comment-post" method="post" enctype="multipart/form-data">
         <input type="text" id= "comment_contents" name="comment_contents"  required>
-        <input type="submit" class="btn btn-primary mb-3" value="댓글 등록">
+        <button type="submit" class="btn btn-primary" onclick="comment()">comment</button>
     </form>
 
 <!--댓글 부분-->
@@ -56,12 +56,22 @@
     <!--    자신이 작성한 댓글에만 삭제버튼활성화-->
         <td th:if="${member_info != null}">
             <td th:if="${member_info.member_seq == m.member_seq}">
-                <input type="button" value="댓글 삭제" th:onclick="location.href='/delete-comment?comment_seq=[[${m.comment_seq}]]'">
+                <input class="btn btn-primary" type="button" value="댓글 삭제" th:onclick="location.href='/delete-comment?comment_seq=[[${m.comment_seq}]]'">
             </td>
         </td>
         <br>
     </tr>
     </table>
 </body>
+    <th:block layout:fragment="script">
+        <script type="text/javascript">
+        function comment(){
+        const form = document.getElementById("comment");
+        form.setAttribute("method", "post")
+        form.setAttribute("action", "comment-post")
+        form.submit();
+    }
+        </script>
+    </th:block>
 </div>
 </html>
