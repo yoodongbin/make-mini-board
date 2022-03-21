@@ -37,23 +37,11 @@
             <!-- include content here !! -->
             <div layout:fragment="content"></div>
 
-<!--페이징 추가 이제 이걸 list 수에 맞춰서 조작하기만 하면 됨 !!!-->
-            <div class="container">
-                <div class="row">
-                    <div class="col">
-                        <ul class="pagination">
-                            <li class="page-item"><a class="page-link" href="?curPage=1">Previous</a></li>
-                            <li class="page-item"><a class="page-link" href="?curPage=1">1</a></li>
-                            <li class="page-item"><a class="page-link" href="?curPage=2">2</a></li>
-                            <li class="page-item"><a class="page-link" href="?curPage=3">3</a></li>
-                            <li class="page-item"><a class="page-link" href="?curPage=4">4</a></li>
-                            <li class="page-item"><a class="page-link" href="?curPage=5">5</a></li>
-                            <li class="page-item"><a class="page-link" href="?curPage=6">Next</a></li>
-                        </ul>
-                    </div>
-                </div>
+            <!--페이징 추가 이제 이걸 list 수에 맞춰서 조작하기만 하면 됨 !!!-->
+            <div th:if="${paging} == null"></div>
+            <div th:unless="${paging} == null">
+
             </div>
-<!--      페이징 인덱스용 ! 수정해야합니다 220304_17:50      -->
         </div>
         <!-- End Main Content -->
 
@@ -83,6 +71,8 @@
     </div>
 </div>
 
+<th:block layout:fragment="script"></th:block>
+
 <script src="/bootstrap/vendor/jquery/jquery.min.js"></script>
 <script src="/bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
@@ -91,14 +81,6 @@
 
 <!-- Custom scripts for all pages-->
 <script src="/bootstrap/js/sb-admin-2.min.js"></script>
-
-<!-- Page level plugins -->
-<script src="/bootstrap/vendor/chart.js/Chart.min.js"></script>
-
-<!-- Page level custom scripts -->
-<script src="/bootstrap/js/demo/chart-area-demo.js"></script>
-<script src="/bootstrap/js/demo/chart-pie-demo.js"></script>
-
 </body>
 
 </html>

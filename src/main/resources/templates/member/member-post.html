@@ -14,9 +14,18 @@
         <label class="col-sm-2 col-form-label">회원가입 완료됐습니다.</label>
     </div>
 
-    <input type="button" class="btn btn-primary mb-3"
-    value="목록으로가기" th:onclick="location.href='/board-list'">
+    <button class="btn btn-primary" onclick="login()">login</button>
 
 </body>
+    <th:block layout:fragment="script">
+        <script type="text/javascript">
+        function login(){
+        const form = document.getElementById("signIn");
+        form.setAttribute("method", "get")
+        form.setAttribute("action", "try-login")
+        form.submit();
+    }
+        </script>
+    </th:block>
 </div>
 </html>

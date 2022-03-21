@@ -2,43 +2,55 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.dao.BoardMapper">
     <select id="getBoard" resultType="com.example.dto.BoardDTO">
-        select * from boards
+        select
+        board_seq, title, board_contents, create_date, modify_date,
+        member_seq, view, parent_seq
+        from boards
     </select>
-<!--세상 쉬움 !-->
-        <select id="getPagingBoard" resultType="com.example.dto.BoardDTO">
-            select * from boards limit #{start}, #{end}
-        </select>
 
-<!--    <select id="getPagingBoard" resultType="com.example.dto.BoardDTO">-->
-<!--        <include refid="pagingHeader">-->
-<!--        </include>-->
-<!--        select *, @ROWNUM:=0 from boards-->
-<!--        <include refid="pagingFooter">-->
-<!--            <property name="start" value="start"/>-->
-<!--            <property name="end" value="end"/>-->
-<!--        </include>-->
-<!--    </select>-->
-
-<!--    &lt;!&ndash; paging을 위해 rownum함수를 이용한 것 ! &ndash;&gt;-->
-<!--    <sql id="pagingHeader">-->
-<!--        select * from (-->
-<!--        select @rownum:=@rownum+1 as rn, boards.* from (-->
-<!--    </sql>-->
-
-<!--    <sql id="pagingFooter">-->
-<!--        )boards-->
-<!--        )boards where rn between #{start} and #{end}-->
-<!--    </sql>-->
-
+<!--    페이징
+        원래는 include를 사용했는데 "일반적으로 mysql 에서는 limit를 사용 합니다."
+        하여 수정 완료 함-->
+    <select id="getPagingBoard" resultType="com.example.dto.BoardDTO" resultMap="BoardDTO">
+        select
+        b.board_seq, b.title, b.board_contents, b.create_date, b.modify_date, m.name,
+        b.member_seq, b.view, b.parent_seq
+        from boards b, member m
+        where b.member_seq = m.member_seq
+        order by b.group_num, b.board_level
+        limit #{start}, #{end}
+    </select>
 
     <insert id="setBoard" parameterType="com.example.dto.BoardDTO">
         insert into boards (board_seq, member_seq, title, board_contents, create_date)
         values(board_seq, #{member_seq}, #{title}, #{board_contents}, now())
     </insert>
 
-    <select id="findBoardBySeq" resultType="com.example.dto.BoardDTO">
-        select board_seq, member_seq, title, board_contents, create_date, view
-        from boards where board_seq = #{board_seq}
+    <select id="forGroupNum" resultType="com.example.dto.BoardDTO">
+        select board_seq, title, group_num from boards where board_seq = last_insert_id()
+    </select>
+
+    <update id="setGroupNum" parameterType="com.example.dto.BoardDTO">
+        update boards
+        SET GROUP_NUM = #{board_seq}
+        WHERE board_seq = #{board_seq}
+    </update>
+
+    <resultMap id="BoardDTO" type="com.example.dto.BoardDTO">
+        <result column="board_seq" property="board_seq"></result>
+        <result column="member_seq" property="member_seq"></result>
+        <result column="title" property="title"></result>
+        <result column="board_contents" property="board_contents"></result>
+        <result column="create_date" property="create_date"></result>
+        <result column="view" property="view"></result>
+        <result column="group_num" property="group_num"></result>
+        <result column="board_level" property="board_level"></result>
+        <collection property="memberDTO" resultMap="MemberDTO"></collection>
+    </resultMap>
+
+    <select id="findBoardBySeq" resultType="com.example.dto.BoardDTO" resultMap="BoardDTO">
+        select b.board_seq, m.member_seq, b.title, b.board_contents, b.create_date, b.view, b.group_num, b.board_level, m.name
+        from boards b , member m  where b.member_seq = m.member_seq and b.board_seq = #{board_seq}
     </select>
 
     <update id="viewCount" parameterType="com.example.dto.BoardDTO">
@@ -62,17 +74,21 @@
         select count(title) from boards
     </select>
 
+    <resultMap id="MemberDTO" type="com.example.dto.MemberDTO">
+        <result column="name" property="name"></result>
+    </resultMap>
+
     <resultMap id="CommentDTO" type="com.example.dto.CommentDTO">
         <result column="comment_seq" property="comment_seq"></result>
         <result column="member_seq" property="member_seq"></result>
         <result column="board_seq" property="board_seq"></result>
-<!--        <result column="name" property="name"></result>-->
         <result column="comment_contents" property="comment_contents"></result>
         <result column="create_date" property="create_date"></result>
+        <collection property="memberDTO" resultMap="MemberDTO"></collection>
     </resultMap>
     
 <!--    상세보기에서 댓글도 같이 보이게끔 하기 ! -->
-    <select id="joinComment" parameterType="com.example.dto.MemberDTO"  resultMap="CommentDTO">
+    <select id="joinComment" parameterType="com.example.dto.CommentDTO"  resultMap="CommentDTO">
         select z.comment_seq, z.board_seq, z.member_seq, m.name, z.comment_contents, z.create_date
         from member m, (select * from comments where board_seq = #{board_seq}) z
         where m.member_seq = z.member_seq
@@ -85,8 +101,8 @@
     </select>
 
     <insert id="setReplyBoard" parameterType="com.example.dto.BoardDTO">
-        insert into boards (board_seq, member_seq, title, board_contents, parent_seq, create_date)
-        values(board_seq, #{member_seq}, #{title}, #{board_contents}, #{parent_seq}, now())
+        insert into boards (board_seq, member_seq, title, board_contents, parent_seq, create_date, group_num, board_level)
+        values(board_seq, #{member_seq}, #{title}, #{board_contents}, #{parent_seq}, now(), #{group_num}, #{board_level})
     </insert>
 
 <!--    해당 게시물의 답글 갯수 카운팅해줌-->
@@ -97,10 +113,14 @@
         and parent_seq = #{board_seq}
     </select>
 
-    <select id="searchForKeyword" resultType="com.example.dto.BoardDTO">
-        select *
-        from boards
-        where title like concat('%',#{keyword},'%')
+    <select id="searchForKeyword" resultType="com.example.dto.BoardDTO" resultMap="BoardDTO">
+        select
+        b.board_seq, b.title, b.board_contents, b.create_date, b.modify_date,
+        b.member_seq, b.view, b.parent_seq, m.name
+        from boards b, member m
+        where b.member_seq = m.member_seq
+        and
+        b.title like concat('%',#{keyword},'%')
     </select>
 
 

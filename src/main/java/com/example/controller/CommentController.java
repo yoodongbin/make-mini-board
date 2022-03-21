@@ -4,18 +4,16 @@ import com.example.dao.CommentMapper;
 import com.example.dto.BoardDTO;
 import com.example.dto.CommentDTO;
 import com.example.dto.MemberDTO;
+import com.example.dto.Message;
 import com.example.service.CommentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
-import javax.net.ssl.HandshakeCompletedEvent;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 @Controller
 public class CommentController {
@@ -34,11 +32,18 @@ public class CommentController {
 
     //댓글 insert
     @PostMapping(value = "/comment-post")
-    public String setComment(HttpSession session,CommentDTO commentDTO, Model model) {
+    public ModelAndView setComment(HttpSession session, CommentDTO commentDTO, ModelAndView model) {
         MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
         BoardDTO detail_bo = (BoardDTO) session.getAttribute("b_detail");
-        CommentDTO commentDTO1 = commentService.saveComment(memberDTO.getMember_seq(), detail_bo.getBoard_seq(), commentDTO);
-        return "redirect:/board-detail?board_seq="+detail_bo.getBoard_seq();
+        if (memberDTO == null) {
+            Message message = new Message("댓글을 등록할 수 없습니다..", "board-detail?board_seq="+detail_bo.getBoard_seq());
+            model.addObject("data", message);
+            model.setViewName("message");
+        } else {
+            CommentDTO commentDTO1 = commentService.saveComment(memberDTO.getMember_seq(), detail_bo.getBoard_seq(), commentDTO);
+            model.setViewName("redirect:/board-detail?board_seq="+detail_bo.getBoard_seq());
+        }
+        return model;
     }
 
     //댓글 삭제하기

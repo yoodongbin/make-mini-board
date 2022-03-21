@@ -17,6 +17,10 @@
             <td th:text="${m.title}"></td>
         </tr>
         <tr>
+            <th>작 성 자</th>
+            <td th:text="${m.memberDTO.name}"></td>
+        </tr>
+        <tr>
             <th>내  용</th>
             <td th:text="${m.board_contents}">s</td>
         </tr>
@@ -24,36 +28,50 @@
 </table>
 <br>
 <input type="button" class="btn btn-primary mb-3" value="목록으로 돌아가기" th:onclick="location.href='/board-list'">
-<span th:if="${member_info.member_seq == detail.member_seq}">
-    <input type="button" class="btn btn-primary mb-3" value="수정" th:onclick="location.href='/update-board?board_seq=[[${detail.board_seq}]]'">
-    <input type="button" class="btn btn-primary mb-3" value="답글" th:onclick="location.href='/board-reply-input?board_seq=[[${detail.board_seq}]]'">
-    <input type="button" class="btn btn-primary mb-3" value="삭제" th:onclick="location.href='/delete-board?board_seq=[[${detail.board_seq}]]'">
+<span th:if="${member_info.member_seq != 0}">
+    <span th:if="${member_info.member_seq == detail.member_seq}">
+        <input type="button" class="btn btn-primary mb-3" value="수정" th:onclick="location.href='/update-board?board_seq=[[${detail.board_seq}]]'">
+        <input type="button" class="btn btn-primary mb-3" value="답글" th:onclick="location.href='/board-reply-input?board_seq=[[${detail.board_seq}]]'">
+        <input type="button" class="btn btn-primary mb-3" value="삭제" th:onclick="location.href='/delete-board?board_seq=[[${detail.board_seq}]]'">
+    </span>
 </span>
 
 <br>
     <form action="comment-post" method="post" enctype="multipart/form-data">
-        <input type="text" id= "comment_contents" name="comment_contents">
-<!--        <input type="submit" value="댓글 쓰기"-->
-<!--               th:onclick="location.href='/comment-post?board_seq=[[${detail.board_seq}]]'">-->
-        <input type="submit" class="btn btn-primary mb-3" value="댓글 등록">
+        <input type="text" id= "comment_contents" name="comment_contents"  required>
+        <button type="submit" class="btn btn-primary" onclick="comment()">comment</button>
     </form>
 
 <!--댓글 부분-->
-<table class="table" th:each="m : ${comments}">
-<tr>
-    <td th:text="${m.comment_contents}"></td>
-    <td th:text="${m.create_date}"></td>
-<!--    <td th:text="${m.name}"></td>-->
-<!--    자신이 작성한 댓글에만 삭제버튼활성화-->
-    <td th:if="${member_info.member_seq == m.member_seq}">
-        <input type="button" value="댓글 삭제" th:onclick="location.href='/delete-comment?comment_seq=[[${m.comment_seq}]]'">
-    </td>
-    <br>
-</tr>
-
-
-</table>
-
+    <table class="table" th:each="m : ${comments}">
+    <tr>
+        <td th:text="${m.comment_contents}"></td>
+        <td th:text="${m.create_date}"></td>
+        <span th:if="${m.member_seq == detail.member_seq}">
+            <td th:text="|작성자[${m.memberDTO.name}]|"></td>
+        </span>
+        <span th:unless="${m.member_seq == detail.member_seq}">
+            <td th:text="${m.memberDTO.name}"></td>
+        </span>
+    <!--    자신이 작성한 댓글에만 삭제버튼활성화-->
+        <td th:if="${member_info != null}">
+            <td th:if="${member_info.member_seq == m.member_seq}">
+                <input class="btn btn-primary" type="button" value="댓글 삭제" th:onclick="location.href='/delete-comment?comment_seq=[[${m.comment_seq}]]'">
+            </td>
+        </td>
+        <br>
+    </tr>
+    </table>
 </body>
+    <th:block layout:fragment="script">
+        <script type="text/javascript">
+        function comment(){
+        const form = document.getElementById("comment");
+        form.setAttribute("method", "post")
+        form.setAttribute("action", "comment-post")
+        form.submit();
+    }
+        </script>
+    </th:block>
 </div>
 </html>
