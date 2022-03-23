@@ -8,6 +8,8 @@ import java.util.List;
 @Mapper
 public interface BoardMapper {
 
+    public List<BoardDTO> myBoard(int member_seq);
+
     public List<BoardDTO> getBoard();
 
     public List<BoardDTO> getPagingBoard(int start, int end);
@@ -37,4 +39,8 @@ public interface BoardMapper {
     public int findReplyBoardBySeq(int board_seq);
 
     public List<BoardDTO> searchForKeyword(String keyword);
+
+    public List aLotPost();
+
+
 }

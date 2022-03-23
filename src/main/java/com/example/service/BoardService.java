@@ -23,6 +23,11 @@ public class BoardService {
         this.commentMapper = commentMapper;
     }
 
+    public List<BoardDTO> myBoard(int member_seq) {
+        List<BoardDTO> boardDTOList = boardMapper.myBoard(member_seq);
+        return boardDTOList;
+    }
+
     public List<BoardDTO> getBoardList() {
         List<BoardDTO> boardDTOList = boardMapper.getBoard();
         return boardDTOList;
@@ -88,6 +93,12 @@ public class BoardService {
         List<CommentDTO> joinComment = boardMapper.joinComment(board_seq);
         return joinComment;
     }
+
+    public List aLotPost() {
+        List aLotPost = boardMapper.aLotPost();
+        return aLotPost;
+    }
+
 
 
 }

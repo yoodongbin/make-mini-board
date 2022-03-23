@@ -27,4 +27,9 @@ public class MemberService {
         return checkDuplication;
     }
 
+    public int todayMember() {
+        int todayMemberCount = memberMapper.todayMember();
+        return todayMemberCount;
+    }
+
 }

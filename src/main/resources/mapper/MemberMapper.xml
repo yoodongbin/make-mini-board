@@ -28,4 +28,10 @@
         where email = #{email}
     </select>
 
+    <select id="todayMember" resultType="int">
+        select count(member_seq)
+        from member
+        where create_date = now()
+    </select>
+
 </mapper>

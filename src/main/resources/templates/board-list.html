@@ -25,8 +25,11 @@
         </tr>
         </thead>
         <tbody>
+
+
         <tr th:each="m, n : ${board}">
             <td th:text="${paging.pageBegin}+${n.index}"></td>
+            <td th:text="${forPaging-n.index}"></td>
             <td>
                 <a th:href="@{/board-detail(board_seq=${m.board_seq})}" th:text="${m.title}"></a>
             </td>

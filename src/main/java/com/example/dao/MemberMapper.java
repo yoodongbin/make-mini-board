@@ -22,4 +22,7 @@ public interface MemberMapper {
 
     // 사용자 정보조회
     public MemberDTO getMember(Integer memberSeq);
+
+    //오늘 날짜의 가입한 회원 수 조회
+    public int todayMember();
 }

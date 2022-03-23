@@ -7,6 +7,7 @@ import com.example.dto.CommentDTO;
 import org.springframework.stereotype.Service;
 
 import javax.xml.stream.events.Comment;
+import java.util.List;
 
 @Service
 public class CommentService {
@@ -32,6 +33,12 @@ public class CommentService {
        CommentDTO commentDTO = commentMapper.findCommentBySeq(commentSeq);
         return commentDTO;
     }
+
+    public List<CommentDTO> myComment(int member_seq) {
+        List<CommentDTO> commentDTO = commentMapper.myComment(member_seq);
+        return commentDTO;
+    }
+
 
     public void removeComment(Integer commentSeq) {
         commentMapper.deleteCommentBySeq(commentSeq);

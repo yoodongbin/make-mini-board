@@ -6,7 +6,9 @@ import com.example.dto.MemberDTO;
 import com.example.dto.Message;
 import com.example.dto.Pagination;
 import com.example.service.BoardService;
+import com.example.service.MemberService;
 import com.example.util.SessionUtil;
+import org.apache.ibatis.jdbc.Null;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -16,7 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.validation.constraints.Null;
+import java.util.List;
 
 @Controller
 public class BoardController {
@@ -27,15 +29,26 @@ public class BoardController {
 
     private BoardService boardService;
 
+    private MemberService memberService;
+
     public BoardController(BoardMapper mapper, BoardService boardService) {
         this.mapper = mapper;
         this.boardService = boardService;
     }
 
+    @GetMapping(value = "/board-dashboard")
+    public ModelAndView dashboard(ModelAndView model){
+        int countContents = boardService.forPaging();
+        model.addObject("countContents",countContents);
+        model.addObject("aLotPost",boardService.aLotPost());
+        model.setViewName("board-dashboard");
+        return model;
+    }
     //전체 게시글 출력, 게시글 main 화면
     @GetMapping(value = "/board-list")
     public ModelAndView getBoard(HttpSession session, ModelAndView model, @RequestParam(defaultValue = "1") int curPage) {
         int countContents = boardService.forPaging();
+//        logger.info("paging"+countContents);
 //        한 페이지에 몇개씩 보여야 하는지
         Pagination.PAGE_SCALE = 10;
 //        몇개의 블록씩 페이지에 표시할 건지 !
@@ -49,8 +62,25 @@ public class BoardController {
             model.addObject("login_info", memberDTO);
         }
         model.addObject("board", boardService.getPagingBoard(start, end));
+        logger.info("board출력되나"+boardService.getPagingBoard(start, end));
         model.addObject("paging", pagination);
+        model.addObject("forPaging",boardService.forPaging());
         model.setViewName("board-list");
+        return model;
+    }
+
+    @GetMapping("/my-board")
+    public ModelAndView myBoard(HttpSession session, ModelAndView model) {
+        MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
+        if(memberDTO == null) {
+            Message message = new Message("로그인 하세요.",  "try-login");
+            model.addObject("data", message);
+            model.setViewName("message");
+        }else {
+            model.addObject("login_info", memberDTO);
+            model.addObject("board", boardService.myBoard(memberDTO.getMember_seq()));
+            model.setViewName("member/my-board");
+        }
         return model;
     }
 

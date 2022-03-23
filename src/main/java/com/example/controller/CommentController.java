@@ -59,4 +59,20 @@ public class CommentController {
         }
         return "redirect:/board-detail?board_seq="+commentDTO.getBoard_seq();
     }
+
+    //내가 쓴 댓글 보기
+    @RequestMapping("/my-comment")
+    public ModelAndView searchBoards(HttpSession session, ModelAndView model) {
+        MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
+        if(memberDTO == null) {
+            Message message = new Message("로그인 하세요.",  "try-login");
+            model.addObject("data", message);
+            model.setViewName("message");
+        }else {
+            model.addObject("login_info", memberDTO);
+            model.addObject("myComment", commentService.myComment(memberDTO.getMember_seq()));
+            model.setViewName("member/my-comment");
+        }
+        return model;
+    }
 }

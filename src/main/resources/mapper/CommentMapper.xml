@@ -8,6 +8,10 @@
         from comments
     </select>
 
+    <select id="myComment" resultType="com.example.dto.CommentDTO">
+        select board_seq, comment_contents, create_date from comments where member_seq = #{member_seq}
+    </select>
+
     <insert id="setComment" parameterType="com.example.dto.CommentDTO">
         insert into comments
         (comment_seq, member_seq, board_seq, comment_contents)
