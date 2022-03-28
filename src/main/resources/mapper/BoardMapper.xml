@@ -17,7 +17,7 @@
         b.member_seq, b.view, b.parent_seq
         from boards b, member m
         where b.member_seq = m.member_seq
-        order by  create_date desc, b.group_num, b.board_level
+        order by  create_date desc, b.group_num, b.board_level desc
         limit #{start}, #{end}
     </select>
 

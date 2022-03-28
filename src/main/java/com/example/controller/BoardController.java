@@ -50,7 +50,7 @@ public class BoardController {
         int countContents = boardService.forPaging();
 //        logger.info("paging"+countContents);
 //        한 페이지에 몇개씩 보여야 하는지
-        Pagination.PAGE_SCALE = 10;
+        Pagination.PAGE_SCALE = 3;
 //        몇개의 블록씩 페이지에 표시할 건지 !
         Pagination.BLOCK_SCALE = 3;
         Pagination pagination = new Pagination(countContents, curPage);
