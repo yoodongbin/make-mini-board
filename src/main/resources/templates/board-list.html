@@ -28,7 +28,6 @@
 
 
         <tr th:each="m, n : ${board}">
-            <td th:text="${paging.pageBegin}+${n.index}"></td>
             <span th:if="${(paging.curPage)>1}">
                 <td th:text="${(forPaging-(paging.curPage-1)*paging.PAGE_SCALE)-n.index}"></td>
             </span>

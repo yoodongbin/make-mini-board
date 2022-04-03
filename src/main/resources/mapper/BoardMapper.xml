@@ -14,10 +14,10 @@
     <select id="getPagingBoard" resultType="com.example.dto.BoardDTO" resultMap="BoardDTO">
         select
         b.board_seq, b.title, b.board_contents, b.create_date, b.modify_date, m.name,
-        b.member_seq, b.view, b.parent_seq
+        b.member_seq, b.view, b.parent_seq, b.group_num
         from boards b, member m
         where b.member_seq = m.member_seq
-        order by  create_date desc, b.group_num, b.board_level desc
+        order by  b.group_num desc
         limit #{start}, #{end}
     </select>
 
