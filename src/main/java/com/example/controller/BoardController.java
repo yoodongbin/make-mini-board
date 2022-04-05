@@ -86,13 +86,16 @@ public class BoardController {
 
     //insert form
     @GetMapping("/board-input")
-    public String insertBoard(HttpSession session) {
+    public ModelAndView insertBoard(HttpSession session, ModelAndView model) {
         String id = SessionUtil.getLoginMemberId(session);
+        MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
+        model.addObject("login_info", memberDTO);
         if (id == null) {
-            return "member/try-login";
+            model.setViewName("member/try-login");
         }else {
-            return "board-input";
+            model.setViewName("board-input");
         }
+        return model;
     }
     //게시글 insert
     @PostMapping(value = "/board-post")
@@ -118,7 +121,7 @@ public class BoardController {
             model.addObject("data", message);
             model.setViewName("message");
         }else {
-            model.addObject("member_info", memberDTO);
+            model.addObject("login_info", memberDTO);
             boardService.viewCount(board_seq);
             BoardDTO boardDTO = boardService.findByBoardSeq(board_seq);
             model.addObject("detail", boardDTO);
@@ -173,10 +176,15 @@ public class BoardController {
     //답글 !!!!!
     //insert form
     @GetMapping("/board-reply-input")
-    public String insertReplyBoard(@RequestParam("board_seq") int board_seq, Model model) {
+    public ModelAndView insertReplyBoard(HttpSession session, @RequestParam("board_seq") int board_seq, ModelAndView model) {
+        MemberDTO memberDTO = (MemberDTO) session.getAttribute("login");
+        model.addObject("login_info", memberDTO);
+
         BoardDTO boardDTO = boardService.findByBoardSeq(board_seq);
-        model.addAttribute("reply_info", boardDTO);
-        return "board-reply-input";
+        model.addObject("reply_info", boardDTO);
+
+        model.setViewName("board-reply-input");
+        return model;
     }
     //답글 등록
     @PostMapping(value = "/board-reply-post")

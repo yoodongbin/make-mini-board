@@ -28,8 +28,8 @@
 </table>
 <br>
 <input type="button" class="btn btn-primary mb-3" value="목록으로 돌아가기" th:onclick="location.href='/board-list'">
-<span th:if="${member_info.member_seq != 0}">
-    <span th:if="${member_info.member_seq == detail.member_seq}">
+<span th:if="${login_info.member_seq != 0}">
+    <span th:if="${login_info.member_seq == detail.member_seq}">
         <input type="button" class="btn btn-primary mb-3" value="수정" th:onclick="location.href='/update-board?board_seq=[[${detail.board_seq}]]'">
         <input type="button" class="btn btn-primary mb-3" value="답글" th:onclick="location.href='/board-reply-input?board_seq=[[${detail.board_seq}]]'">
         <input type="button" class="btn btn-primary mb-3" value="삭제" th:onclick="location.href='/delete-board?board_seq=[[${detail.board_seq}]]'">
@@ -37,10 +37,10 @@
 </span>
 
 <br>
-    <form action="comment-post" method="post" enctype="multipart/form-data">
+    <form id="upLoadComment" action="comment-post" method="post" enctype="multipart/form-data">
         <input type="text" id= "comment_contents" name="comment_contents"  required>
-        <input type="submit" class="btn btn-primary mb-3" value="댓글 등록">
     </form>
+    <button class="btn btn-primary mb-3" value="댓글 등록" onclick="uploadComment()">댓글 등록</button>
 
 <!--댓글 부분-->
     <table class="table" th:each="m : ${comments}">
@@ -54,8 +54,8 @@
             <td th:text="${m.memberDTO.name}"></td>
         </span>
     <!--    자신이 작성한 댓글에만 삭제버튼활성화-->
-        <td th:if="${member_info != null}">
-            <td th:if="${member_info.member_seq == m.member_seq}">
+        <td th:if="${login_info != null}">
+            <td th:if="${login_info.member_seq == m.member_seq}">
                 <input type="button" value="댓글 삭제" th:onclick="location.href='/delete-comment?comment_seq=[[${m.comment_seq}]]'">
             </td>
         </td>
@@ -63,5 +63,25 @@
     </tr>
     </table>
 </body>
+
+    <th:block layout:fragment="script">
+        <script type="text/javascript">
+        function uploadComment(){
+            const form = document.getElementById("upLoadComment");
+            /** validation here!!! **/
+            var commentContents = form.comment_contents.value;
+
+            if (!commentContents){
+                alert("내용을 입력하지 않았습니다.");
+                commentContents.focus();
+                return false;
+            }
+            /** **/
+            form.setAttribute("method", "post")
+            form.setAttribute("action", "comment-post")
+            form.submit();
+        }
+        </script>
+    </th:block>
 </div>
 </html>
