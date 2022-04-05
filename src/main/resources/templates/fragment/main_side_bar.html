@@ -1,5 +1,6 @@
 <!-- Sidebar -->
-<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar" th:fragment="sidebar">
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar" th:fragment="sidebar"
+    xmlns:th="http://www.w3.org/1999/xhtml">
 
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="board-list">
@@ -74,6 +75,7 @@
     </div>
 
     <!-- Nav Item - Pages Collapse Menu -->
+    <span th:if="${session.login != null}">
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
            aria-expanded="true" aria-controls="collapsePages">
@@ -83,14 +85,12 @@
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">My Pages:</h6>
-                <a class="collapse-item" href="try-login">Sign in</a>
-                <a class="collapse-item" href="member-input">Sign up</a>
                 <a class="collapse-item" href="my-board">내가 쓴 게시물</a>
                 <a class="collapse-item" href="my-comment">내가 쓴 댓글</a>
             </div>
         </div>
     </li>
-
+    </span>
     <!-- Sidebar Toggler (Sidebar) -->
     <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>

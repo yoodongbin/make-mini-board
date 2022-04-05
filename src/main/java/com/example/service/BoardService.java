@@ -75,7 +75,8 @@ public class BoardService {
     public BoardDTO setReplyBoard(Integer memberSeq, Integer parentSeq, BoardDTO boardDTO) {
         boardDTO.setMember_seq(memberSeq);
         boardDTO.setParent_seq(parentSeq);
-        BoardMapper boardMapper = this.boardMapper;
+        BoardMapper
+                boardMapper = this.boardMapper;
         boardMapper.setReplyBoard(boardDTO);
         return boardDTO;
     }

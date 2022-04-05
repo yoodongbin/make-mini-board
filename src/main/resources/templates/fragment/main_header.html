@@ -54,8 +54,13 @@
         <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span th:if="${session.login == null}">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">로그인 후 이용해주세요.</span>
+        </span>
+        <span th:unless="${session.login == null}">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="${login_info.name} "></span>
+        </span>
 
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
                 <img class="img-profile rounded-circle"
                      src="/bootstrap/img/undraw_profile.svg">
             </a>
@@ -76,10 +81,19 @@
                 </a>
                 <div class="dropdown-divider"></div>
 <!--                th:href="@{/board-detail(board_seq=${m.board_seq})}"-->
+
+                <span th:if="${session.login == null}">
+                <a class="dropdown-item" th:onclick="location.href='/try-login'" data-toggle="modal" data-target="#loginModal">
+                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Login
+                </a>
+                </span>
+                <span th:unless="${session.login == null}">
                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                     Logout
                 </a>
+                </span>
 
 
             </div>
