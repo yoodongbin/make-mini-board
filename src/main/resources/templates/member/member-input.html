@@ -25,10 +25,20 @@
         <label class="form-label">Password</label>
         <input type="password" class="form-control" name="password"  required>
     </div>
-    <button type="submit" class="btn btn-primary">회원가입</button>
+    <button type="submit" class="btn btn-primary" onclick="signup()">sign up</button>
 </form>
     <br>
     <input class="btn btn-primary" type="button" value="목록으로 돌아가기" th:onclick="location.href='/board-list'">
 </body>
+    <th:block layout:fragment="script">
+        <script type="text/javascript">
+        function signup(){
+        const form = document.getElementById("signIn");
+        form.setAttribute("method", "post")
+        form.setAttribute("action", "member-post")
+        form.submit();
+    }
+        </script>
+    </th:block>
 </div>
 </html>
