@@ -56,7 +56,9 @@ public class MemberController {
                 model.setViewName("message");
             } else {
                 mapper.setMember(memberDTO);
-                model.setViewName("member/member-post");
+                Message message = new Message("회원가입이 완료됐습니다..","try-login");
+                model.addObject("data", message);
+                model.setViewName("message");
             }
         }
         return model;
@@ -67,7 +69,6 @@ public class MemberController {
     public String login(HttpServletRequest httpServletRequest) {
         HttpSession session = httpServletRequest.getSession();
         if (session.getId() == null) {
-            logger.info("로그인 세션 살아있어 ? 아니 로그인세션 없어");
         } else {
             session.removeAttribute(session.getId());
             session.invalidate(); //근데 이거 좀 위험함 ! 모든 세션 다 죽임 ㄷ ㄷ

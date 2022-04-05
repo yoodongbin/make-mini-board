@@ -9,26 +9,71 @@
     <title>Title</title>
 </head>
 <body>
-<form action="member-post" method="post" enctype="multipart/form-data">
+<form action="member-post" id="signUp" method="post" enctype="multipart/form-data">
     <div class="mb-3">
         <label class="form-label">Name</label>
-        <input type="text" class="form-control" name="name" size="10" required>
+        <input type="text" class="form-control" name="name" id="name" size="10" required>
     </div>
     <div class="mb-3">
         <label class="form-label">Email address</label>
-        <input type="text" class="form-control" name="email" size="10" required>
+        <input type="text" class="form-control" name="email" id="email" size="10" required>
     </div>
-
-
-
     <div class="mb-3">
         <label class="form-label">Password</label>
-        <input type="password" class="form-control" name="password"  required>
+        <input type="password" class="form-control" name="password" id="pwd" required>
     </div>
-    <button type="submit" class="btn btn-primary">회원가입</button>
 </form>
-    <br>
-    <input class="btn btn-primary" type="button" value="목록으로 돌아가기" th:onclick="location.href='/board-list'">
+
+<div class="row">
+    <div class="col">
+        <button class="btn btn-primary" onclick="signup()">회원가입</button>
+        <input class="btn btn-primary" type="button" value="목록으로 돌아가기" th:onclick="location.href='/board-list'">
+    </div>
+</div>
+
 </body>
+
+    <th:block layout:fragment="script">
+        <script type="text/javascript">
+    function signup(){
+        const form = document.getElementById("signUp");
+
+        var name = form.name.value;
+        var email = form.email.value;
+        var pwd = form.pwd.value;
+
+        var regEmail = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
+        var regPwd = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/;
+
+        if (!name){
+            alert("이름을 입력하지 않았습니다.");
+            name.focus();
+            return false;
+        }
+
+        if (!email){
+            alert("이메일을 입력하지 않았습니다.");
+            email.focus();
+            return false;
+        }
+        if (!pwd){
+            alert("비밀번호를 입력하지 않았습니다.");
+            pwd.focus();
+            return false;
+        }
+        if (regEmail.test(email) === false) {
+          alert('입력된 값은 이메일형식이 아닙니다.');
+          return false;
+        }
+        if(regPwd.test(pwd) === false){
+          alert('비밀번호는 8자리 이상, 숫자, 대소문자와 특수문자를 각 최소 1개 이상 포함해야 합니다.');
+          return false;
+        }
+            form.setAttribute("method", "post")
+            form.setAttribute("action", "member-post")
+            form.submit();
+    }
+        </script>
+    </th:block>
 </div>
 </html>

@@ -9,11 +9,11 @@
                 <form method="post" id="signIn">
                     <div class="mb-3">
                         <label class="form-label">Email address</label>
-                        <input type="text" class="form-control" name="email" size="10" required value="bab@bab">
+                        <input type="text" class="form-control" name="email" id="email" size="10" required value="bab@bab">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Password</label>
-                        <input type="password" class="form-control" name="password" required value="12">
+                        <input type="password" class="form-control" name="password" id="pwd" required value="12">
                     </div>
                 </form>
             </div>
@@ -32,10 +32,25 @@
     function login(){
         const form = document.getElementById("signIn");
         /** validation here!!! **/
+        var regEmail = document.getElementById("email");
+        var regPwd = document.getElementById("pwd");
+        if ((regEmail.value) == ""){
+            alert("아이디를 입력하지 않았습니다.");
+            regEmail.focus();
+            return false;
+        }
+        if ((regPwd.value) == ""){
+            alert("비밀번호를 입력하지 않았습니다.");
+            regPwd.focus();
+            return false;
+        }
+
+        /** **/
         form.setAttribute("method", "post")
         form.setAttribute("action", "member-login")
         form.submit();
     }
+
 </script>
 </th:block>
 </html>
