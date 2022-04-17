@@ -9,6 +9,8 @@ import com.example.dto.MemberDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class BoardService {
@@ -37,6 +39,20 @@ public class BoardService {
         List<BoardDTO> pagingBoardList = boardMapper.getPagingBoard(start, end);
 //        작성자이름 부릉부릉하다가 끝
         pagingBoardList.forEach(s-> System.out.println(memberMapper.getMember(s.getMember_seq())));
+
+        Map<Integer, Map<Integer, List<BoardDTO>>> newList =
+        pagingBoardList.stream()
+                .collect(
+                    Collectors.groupingBy(BoardDTO::getBoard_level,
+                            Collectors.groupingBy(BoardDTO::getParent_seq)));
+
+
+
+        List<BoardDTO> pList = pagingBoardList.stream().filter(p->p.getBoard_level() == 0).collect(Collectors.toList());
+        List<BoardDTO> cList = pagingBoardList.stream().filter(p->p.getBoard_level() == 1).collect(Collectors.toList());
+        List<BoardDTO> ccList = pagingBoardList.stream().filter(p->p.getBoard_level() == 2).collect(Collectors.toList());
+
+
         return pagingBoardList;
     }
 
