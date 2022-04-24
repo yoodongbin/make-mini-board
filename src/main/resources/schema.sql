@@ -105,3 +105,20 @@ values (comment_seq, 5, 2, '공감 22 존맛탱구리 ! ');
 insert into comments
 (comment_seq, member_seq, board_seq, comment_contents)
 values (comment_seq, 7, 1, '공감 22 하 과자 못 끊어요 ! ');
+
+
+
+WITH RECURSIVE board_paths (board_level, board_seq, title, group_num, parent_seq, path) AS
+(
+   SELECT board_level , board_seq, title, group_num, parent_seq, title
+   FROM boards
+   WHERE  board_level = '0'
+
+   UNION ALL
+
+   SELECT ep.board_level+1, e.board_seq, e.title, e.group_num, e.parent_seq,  CONCAT(ep.path, '->', e.title)
+   FROM board_paths AS ep JOIN boards AS e
+                               ON ep.board_seq = e.parent_seq
+   -- and ep.group_num = e.group_num
+)
+SELECT * FROM board_paths ORDER BY path;
