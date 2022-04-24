@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -23,5 +25,9 @@ public class BoardServiceTest {
         List<BoardDTO> boardList = boardService.getPagingBoard(1, 10);
 
         assertThat(boardList.size(), is(greaterThan(0)));
+
+        List<BoardDTO> pList = boardList.stream().filter(p->p.getBoard_level() == 0).collect(Collectors.toList());
+        List<BoardDTO> cList = boardList.stream().filter(p->p.getBoard_level() == 1).collect(Collectors.toList());
+        List<BoardDTO> ccList = boardList.stream().filter(p->p.getBoard_level() == 2).collect(Collectors.toList());
     }
 }

@@ -8,6 +8,7 @@ import com.example.dto.CommentDTO;
 import com.example.dto.MemberDTO;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -48,12 +49,17 @@ public class BoardService {
 
 
 
-        List<BoardDTO> pList = pagingBoardList.stream().filter(p->p.getBoard_level() == 0).collect(Collectors.toList());
-        List<BoardDTO> cList = pagingBoardList.stream().filter(p->p.getBoard_level() == 1).collect(Collectors.toList());
-        List<BoardDTO> ccList = pagingBoardList.stream().filter(p->p.getBoard_level() == 2).collect(Collectors.toList());
-
-
         return pagingBoardList;
+    }
+
+    private List<BoardDTO> recuerciveBoard(List<BoardDTO> boards){
+
+        List<BoardDTO> result = new ArrayList();
+
+
+
+
+        return result;
     }
 
     public List<BoardDTO> searchForKeyword(String keyword){
