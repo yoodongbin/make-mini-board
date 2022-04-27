@@ -30,4 +30,7 @@ public class BoardServiceTest {
         List<BoardDTO> cList = boardList.stream().filter(p->p.getBoard_level() == 1).collect(Collectors.toList());
         List<BoardDTO> ccList = boardList.stream().filter(p->p.getBoard_level() == 2).collect(Collectors.toList());
     }
+
+
+
 }

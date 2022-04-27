@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class BoardController {
@@ -61,8 +62,15 @@ public class BoardController {
         }else {
             model.addObject("login_info", memberDTO);
         }
-        model.addObject("board", boardService.getPagingBoard(start, end));
-        logger.info("board출력되나"+boardService.getPagingBoard(start, end));
+
+        List<BoardDTO> boardList = boardService.getPagingBoard(start, end);
+        List<BoardDTO> pList = boardList.stream().filter(p->p.getBoard_level() == 0).collect(Collectors.toList());
+        List<BoardDTO> cList = boardList.stream().filter(p->p.getBoard_level() == 1).collect(Collectors.toList());
+        List<BoardDTO> ccList = boardList.stream().filter(p->p.getBoard_level() == 2).collect(Collectors.toList());
+
+
+
+//        model.addObject("board", boardService.getPagingBoard(start, end));
         model.addObject("paging", pagination);
         model.addObject("forPaging",boardService.forPaging());
         model.setViewName("board-list");
