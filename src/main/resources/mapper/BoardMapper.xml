@@ -13,7 +13,7 @@
         하여 수정 완료 함-->
     <select id="getPagingBoard" resultType="com.example.dto.BoardDTO" resultMap="BoardDTO">
         select
-        b.board_seq, b.title, b.board_contents, b.create_date, b.modify_date, m.name,
+        b.board_seq, b.title, b.board_contents, b.create_date, b.modify_date, m.name, b.board_level,
         b.member_seq, b.view, b.parent_seq, b.group_num
         from boards b, member m
         where b.member_seq = m.member_seq

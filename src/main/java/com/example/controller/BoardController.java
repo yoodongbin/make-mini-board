@@ -64,9 +64,17 @@ public class BoardController {
         }
 
         List<BoardDTO> boardList = boardService.getPagingBoard(start, end);
-        List<BoardDTO> pList = boardList.stream().filter(p->p.getBoard_level() == 0).collect(Collectors.toList());
+
+
+
+//        List<BoardDTO> pList = boardList.stream().filter(p->p.getBoard_level() == 0).collect(Collectors.toList());
+//
+//
+//        System.out.println("plist입니다. : "+pList);
         List<BoardDTO> cList = boardList.stream().filter(p->p.getBoard_level() == 1).collect(Collectors.toList());
+        System.out.println("clist입니다. : "+cList);
         List<BoardDTO> ccList = boardList.stream().filter(p->p.getBoard_level() == 2).collect(Collectors.toList());
+        System.out.println("cclist입니다. : "+ccList);
 
 
 
