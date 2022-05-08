@@ -50,6 +50,7 @@
         )
 
         SELECT * FROM board_paths ORDER BY path
+        limit #{start}, #{end}
     </select>
 
     <insert id="setBoard" parameterType="com.example.dto.BoardDTO">
