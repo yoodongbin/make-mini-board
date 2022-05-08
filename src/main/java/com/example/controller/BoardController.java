@@ -63,24 +63,24 @@ public class BoardController {
             model.addObject("login_info", memberDTO);
         }
 
-        List<BoardDTO> boardList = boardService.getPagingBoard(start, end);
+//        List<BoardDTO> boardList = boardService.getPagingBoard(start, end);
 
         //보드레벨이 몇단계까지 있는지 알아내는 것 필요
-        boardList.stream().distinct().forEach(groupnum -> groupnum.getBoard_level());
-        List<BoardDTO> pList = boardList.stream().filter(p->p.getBoard_level() == 0).collect(Collectors.toList());
-        BoardDTO gorupnum = pList.stream().distinct().forEach(groupnum -> groupnum.getGroup_num());
+
+//        List<BoardDTO> pList = boardList.stream().filter(p->p.getBoard_level() == 0).collect(Collectors.toList());
+//        BoardDTO gorupnum = pList.stream().distinct().forEach(groupnum -> groupnum.getGroup_num());
+//
+//
+//
+//        System.out.println("plist입니다. : "+pList);
+//        List<BoardDTO> cList = boardList.stream().filter(p->p.getBoard_level() == 1).collect(Collectors.toList());
+//        System.out.println("clist입니다. : "+cList);
+//        List<BoardDTO> ccList = boardList.stream().filter(p->p.getBoard_level() == 2).collect(Collectors.toList());
+//        System.out.println("cclist입니다. : "+ccList);
 
 
 
-        System.out.println("plist입니다. : "+pList);
-        List<BoardDTO> cList = boardList.stream().filter(p->p.getBoard_level() == 1).collect(Collectors.toList());
-        System.out.println("clist입니다. : "+cList);
-        List<BoardDTO> ccList = boardList.stream().filter(p->p.getBoard_level() == 2).collect(Collectors.toList());
-        System.out.println("cclist입니다. : "+ccList);
-
-
-
-//        model.addObject("board", boardService.getPagingBoard(start, end));
+        model.addObject("board", boardService.getPagingBoard(start, end));
         model.addObject("paging", pagination);
         model.addObject("forPaging",boardService.forPaging());
         model.setViewName("board-list");

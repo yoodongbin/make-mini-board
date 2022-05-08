@@ -12,13 +12,44 @@
         원래는 include를 사용했는데 "일반적으로 mysql 에서는 limit를 사용 합니다."
         하여 수정 완료 함-->
     <select id="getPagingBoard" resultType="com.example.dto.BoardDTO" resultMap="BoardDTO">
-        select
-        b.board_seq, b.title, b.board_contents, b.create_date, b.modify_date, m.name, b.board_level,
-        b.member_seq, b.view, b.parent_seq, b.group_num
-        from boards b, member m
+<!--        select-->
+<!--        b.board_seq, b.title, b.board_contents, b.create_date, b.modify_date, m.name, b.board_level,-->
+<!--        b.member_seq, b.view, b.parent_seq, b.group_num-->
+<!--        from boards b, member m-->
+<!--        where b.member_seq = m.member_seq-->
+<!--        order by  b.group_num desc-->
+<!--        limit #{start}, #{end}-->
+        WITH RECURSIVE board_paths (board_level, board_seq, title,  name , group_num, parent_seq, path) AS
+
+        (
+
+        SELECT b.board_level , b.board_seq, b.title, m.name, b.group_num, b.parent_seq, b.title
+
+        FROM boards b, member m
+
         where b.member_seq = m.member_seq
-        order by  b.group_num desc
-        limit #{start}, #{end}
+
+        and b.board_level = '0'
+
+
+
+        UNION all
+
+
+
+        SELECT ep.board_level+1, e.board_seq, e.title,  m.name, e.group_num, e.parent_seq, CONCAT(ep.path, '->', e.board_seq)
+
+        FROM member m, board_paths AS ep JOIN boards AS e
+
+        ON ep.board_seq = e.parent_seq
+
+        and ep.group_num = e.group_num
+
+        where m.member_seq = e.member_seq
+
+        )
+
+        SELECT * FROM board_paths ORDER BY path
     </select>
 
     <insert id="setBoard" parameterType="com.example.dto.BoardDTO">
